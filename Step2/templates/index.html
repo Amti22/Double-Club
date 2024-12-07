@@ -171,6 +171,16 @@
             margin-top: 15px;
         }
 
+        .membership-return {
+            text-align: right;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-top: 5px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
         .buy-button {
             width: 100%;
             background-color: var(--primary-black);
@@ -236,7 +246,6 @@
     </footer>
 
     <script>
-        // Reusing the previous JavaScript with minor modifications
         async function fetchMatches() {
             try {
                 const response = await fetch('/matches');
@@ -281,6 +290,7 @@
                         </div>
                     </div>
                     <div class="return-display">Expected Return: $0</div>
+                    <div class="membership-return" style="display:none;">Double-Club Membership Return: $0</div>
                     <button class="buy-button" style="display: none;">Place Bet</button>
                 `;
 
@@ -292,6 +302,7 @@
         function attachListeners(matchDiv, match) {
             const betInput = matchDiv.querySelector('.bet-amount');
             const returnDisplay = matchDiv.querySelector('.return-display');
+            const membershipReturnDisplay = matchDiv.querySelector('.membership-return');
             const buyButton = matchDiv.querySelector('.buy-button');
             const buttons = matchDiv.querySelectorAll('.button-group button');
 
@@ -339,10 +350,16 @@
                 const betAmount = parseFloat(betInput.value) || 0;
                 if (selectedOdds && betAmount > 0) {
                     const expectedReturn = (betAmount * selectedOdds).toFixed(2);
+                    const membershipReturn = (betAmount * selectedOdds * 2).toFixed(2);
+
                     returnDisplay.textContent = `Expected Return: $${expectedReturn}`;
+                    membershipReturnDisplay.textContent = `Double-Club Membership Return: $${membershipReturn}`;
+
+                    membershipReturnDisplay.style.display = 'block';
                     buyButton.style.display = 'inline-block';
                 } else {
                     returnDisplay.textContent = 'Expected Return: $0';
+                    membershipReturnDisplay.style.display = 'none';
                     buyButton.style.display = 'none';
                 }
             }
