@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Betting Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2C3E50;
+            --secondary-color: #34495E;
+            --accent-color: #3498DB;
+            --background-color: #ECF0F1;
+            --text-color: #2C3E50;
+            --card-background: white;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .match-container {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .match-container:hover {
+            transform: translateY(-3px);
+        }
+
+        .match-header {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bet-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bet-amount {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #D3D3D3;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .button-group button {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 25px;
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .button-group button:hover {
+            background-color: #2980B9;
+        }
+
+        .button-group button.active {
+            background-color: #27AE60;
+            transform: scale(1.05);
+        }
+
+        .return-display {
+            text-align: right;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-top: 10px;
+        }
+
+        .buy-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #27AE60;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .buy-button:hover {
+            background-color: #2ECC71;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Football Betting Platform</h1>
+        <div id="matches-list"></div>
+    </div>
+
+    <script>
+        // The entire JavaScript remains the same as in the original file
+        async function fetchMatches() {
+            try {
+                const response = await fetch('/matches');
+                if (!response.ok) throw new Error('Error fetching matches');
+
+                const matches = await response.json();
+                if (matches.length > 0) {
+                    renderMatches(matches);
+                } else {
+                    document.getElementById('matches-list').innerHTML = '<p>No matches available</p>';
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('matches-list').innerHTML = '<p>Failed to load matches</p>';
+            }
+        }
+
+        function renderMatches(matches) {
+            const matchesList = document.getElementById('matches-list');
+            matchesList.innerHTML = '';
+
+            matches.forEach(match => {
+                const matchDiv = document.createElement('div');
+                matchDiv.classList.add('match-container');
+                matchDiv.setAttribute('data-id', match.id);
+
+                matchDiv.innerHTML = `
+                    <div class="match-header">
+                        <span>${match.home_team}</span>
+                        <span>vs</span>
+                        <span>${match.away_team}</span>
+                    </div>
+                    <div>
+                        <strong>Odds:</strong> Home: ${match.home_odds}, Draw: ${match.draw_odds}, Away: ${match.away_odds}
+                    </div>
+                    <div class="bet-container">
+                        <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1">
+                        <div class="button-group">
+                            <button class="home-btn">Home</button>
+                            <button class="draw-btn">Draw</button>
+                            <button class="away-btn">Away</button>
+                        </div>
+                    </div>
+                    <div class="return-display">Expected Return: $0</div>
+                    <button class="buy-button" style="display: none;">Place Bet</button>
+                `;
+
+                matchesList.appendChild(matchDiv);
+                attachListeners(matchDiv, match);
+            });
+        }
+
+        function attachListeners(matchDiv, match) {
+            const betInput = matchDiv.querySelector('.bet-amount');
+            const returnDisplay = matchDiv.querySelector('.return-display');
+            const buyButton = matchDiv.querySelector('.buy-button');
+            const buttons = matchDiv.querySelectorAll('.button-group button');
+
+            let selectedOption = null;
+            let selectedOdds = null;
+
+            betInput.addEventListener('input', updateReturnDisplay);
+
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    if (button.classList.contains('home-btn')) {
+                        selectedOption = 'home';
+                        selectedOdds = match.home_odds;
+                    } else if (button.classList.contains('draw-btn')) {
+                        selectedOption = 'draw';
+                        selectedOdds = match.draw_odds;
+                    } else if (button.classList.contains('away-btn')) {
+                        selectedOption = 'away';
+                        selectedOdds = match.away_odds;
+                    }
+
+                    updateReturnDisplay();
+                });
+            });
+
+            buyButton.addEventListener('click', () => {
+                if (!selectedOption || !selectedOdds) {
+                    alert('Please select an option before buying.');
+                    return;
+                }
+
+                const betAmount = parseFloat(betInput.value) || 0;
+                if (betAmount <= 0) {
+                    alert('Please enter a valid bet amount.');
+                    return;
+                }
+
+                alert(`Bet placed on ${selectedOption} at odds ${selectedOdds} with $${betAmount}`);
+            });
+
+            function updateReturnDisplay() {
+                const betAmount = parseFloat(betInput.value) || 0;
+                if (selectedOdds && betAmount > 0) {
+                    const expectedReturn = (betAmount * selectedOdds).toFixed(2);
+                    returnDisplay.textContent = `Expected Return: $${expectedReturn}`;
+                    buyButton.style.display = 'inline-block';
+                } else {
+                    returnDisplay.textContent = 'Expected Return: $0';
+                    buyButton.style.display = 'none';
+                }
+            }
+        }
+
+        window.onload = fetchMatches;
+    </script>
+</body>
+</html>

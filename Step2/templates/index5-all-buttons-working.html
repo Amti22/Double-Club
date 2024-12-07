@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Betting System</title>
+    <style>
+        /* Add your CSS here */
+        .match-container { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
+        .button-group button { margin-right: 10px; }
+        .active { background-color: yellow; }
+    </style>
+</head>
+<body>
+    <h1>Football Betting</h1>
+    <div id="matches-list"></div>
+
+    <script>
+        async function fetchMatches() {
+            try {
+                const response = await fetch('/matches');
+                if (!response.ok) throw new Error('Error fetching matches');
+
+                const matches = await response.json();
+                if (matches.length > 0) {
+                    renderMatches(matches);
+                } else {
+                    document.getElementById('matches-list').innerHTML = '<p>No matches available</p>';
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('matches-list').innerHTML = '<p>Failed to load matches</p>';
+            }
+        }
+
+        function renderMatches(matches) {
+            const matchesList = document.getElementById('matches-list');
+            matchesList.innerHTML = '';
+
+            matches.forEach(match => {
+                // Create a container for each match
+                const matchDiv = document.createElement('div');
+                matchDiv.classList.add('match-container');
+                matchDiv.setAttribute('data-id', match.id);
+
+                // Add match details to the container
+                matchDiv.innerHTML = `
+                    <div class="match-header">${match.home_team} vs ${match.away_team}</div>
+                    <div>
+                        <strong>Odds:</strong> Home: ${match.home_odds}, Draw: ${match.draw_odds}, Away: ${match.away_odds}
+                    </div>
+                    <div class="bet-container">
+                        <input type="number" class="bet-amount" placeholder="Bet Amount" min="1">
+                        <div class="button-group">
+                            <button class="home-btn">Home</button>
+                            <button class="draw-btn">Draw</button>
+                            <button class="away-btn">Away</button>
+                        </div>
+                    </div>
+                    <div class="return-display" style="margin-top: 10px;">Expected Return: $0</div>
+                    <button class="buy-button" style="display: none;">Buy</button>
+                `;
+
+                matchesList.appendChild(matchDiv);
+
+                // Attach event listeners to each match
+                attachListeners(matchDiv, match);
+            });
+        }
+
+        function attachListeners(matchDiv, match) {
+            const betInput = matchDiv.querySelector('.bet-amount');
+            const returnDisplay = matchDiv.querySelector('.return-display');
+            const buyButton = matchDiv.querySelector('.buy-button');
+            const buttons = matchDiv.querySelectorAll('.button-group button');
+
+            let selectedOption = null;
+            let selectedOdds = null;
+
+            // Handle bet amount input
+            betInput.addEventListener('input', () => {
+                const betAmount = parseFloat(betInput.value) || 0;
+                updateReturnDisplay();
+            });
+
+            // Handle option selection
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Deselect all buttons in this match
+                    buttons.forEach(btn => btn.classList.remove('active'));
+
+                    // Select the clicked button
+                    button.classList.add('active');
+
+                    // Update selected option and odds
+                    if (button.classList.contains('home-btn')) {
+                        selectedOption = 'home';
+                        selectedOdds = match.home_odds;
+                    } else if (button.classList.contains('draw-btn')) {
+                        selectedOption = 'draw';
+                        selectedOdds = match.draw_odds;
+                    } else if (button.classList.contains('away-btn')) {
+                        selectedOption = 'away';
+                        selectedOdds = match.away_odds;
+                    }
+
+                    updateReturnDisplay();
+                });
+            });
+
+            // Handle buy button
+            buyButton.addEventListener('click', () => {
+                if (!selectedOption || !selectedOdds) {
+                    alert('Please select an option before buying.');
+                    return;
+                }
+
+                const betAmount = parseFloat(betInput.value) || 0;
+                if (betAmount <= 0) {
+                    alert('Please enter a valid bet amount.');
+                    return;
+                }
+
+                alert(`Bet placed on ${selectedOption} at odds ${selectedOdds} with $${betAmount}`);
+            });
+
+            function updateReturnDisplay() {
+                const betAmount = parseFloat(betInput.value) || 0;
+                if (selectedOdds && betAmount > 0) {
+                    const expectedReturn = (betAmount * selectedOdds).toFixed(2);
+                    returnDisplay.textContent = `Expected Return: $${expectedReturn}`;
+                    buyButton.style.display = 'inline-block';
+                } else {
+                    returnDisplay.textContent = 'Expected Return: $0';
+                    buyButton.style.display = 'none';
+                }
+            }
+        }
+
+        window.onload = fetchMatches;
+    </script>
+</body>
+</html>
