@@ -17,9 +17,6 @@
             --Headling2:#FF7A7A;
             --Overline: #9892E0;
             --Button-label: ##FFFFFF96;
-
-
-
         }
 
         * {
@@ -72,7 +69,7 @@
             height: 2px;
             bottom: -5px;
             left: 0;
-            background-color: #FFFFFF96);
+            background-color: #FFFFFF96;
             transition: width 0.3s;
         }
 
@@ -171,17 +168,19 @@
         }
 
         .return-display {
-            text-align: right;
+            text-align: right;  /* Keep expected return on the right */
             font-weight: 600;
             color: #FFFFFF96;
             margin-top: 15px;
+            display: block;  /* Ensure it's displayed */
         }
 
         .membership-return {
-            text-align: right;
+            text-align: right;  /* Align to the right side */
             font-weight: 600;
-            color:  var(--Overline);
+            color: var(--Overline);
             margin-top: 15px;
+            display: block;  /* Make sure it's always visible */
         }
 
         .buy-button {
@@ -235,7 +234,6 @@
         <div id="matches-list"></div>
     </div>
 
-
     <script>
         async function fetchMatches() {
             try {
@@ -281,7 +279,7 @@
                         </div>
                     </div>
                     <div class="return-display">Expected Return: $0</div>
-                    <div class="membership-return" style="display:none;">Double-Club Membership Return: $0</div>
+                    <div class="membership-return">Double-Club Membership Return: $0</div>
                     <button class="buy-button" style="display: none;">Place Bet</button>
                 `;
 
@@ -350,7 +348,7 @@
                     buyButton.style.display = 'inline-block';
                 } else {
                     returnDisplay.textContent = 'Expected Return: $0';
-                    membershipReturnDisplay.style.display = 'none';
+                    membershipReturnDisplay.style.display = 'block';
                     buyButton.style.display = 'none';
                 }
             }
