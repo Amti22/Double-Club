@@ -9,10 +9,17 @@
         :root {
             --primary-black: #FFFFFF96;
             --primary-white: #FFFFFF;
-            --secondary-gray: #666666;
+            --secondary-gray: #FFFFFF96;
             --accent-red: #E63946;
             --accent-blue: #457B9D;
             --background-gray: #F8F9FA;
+            --Content1: #FFFFFF96;
+            --Headling2:#FF7A7A;
+            --Overline: #9892E0;
+            --Button-label: ##FFFFFF96;
+
+
+
         }
 
         * {
@@ -143,7 +150,7 @@
 
         .button-group button {
             background-color: #3E4352;
-            color: #FFFFFF96;
+            color: var(--Button-label);
             border: 2px solid #3E4352;
             border-radius: 6px;
             padding: 12px 15px;
@@ -154,13 +161,13 @@
 
         .button-group button:hover {
             background-color: var(--primary-black);
-            color: var(--primary-white);
+            color: var(--Button-label);
         }
 
         .button-group button.active {
             background-color: var(--accent-blue);
             border-color: var(--accent-blue);
-            color: var(--primary-white);
+            color: var(--Button-label);
         }
 
         .return-display {
@@ -173,14 +180,14 @@
         .membership-return {
             text-align: right;
             font-weight: 600;
-            color: #FFFFFF96;
+            color:  var(--Overline);
             margin-top: 15px;
         }
 
         .buy-button {
             width: 100%;
             background-color: #3E4352;
-            color: #FFFFFF96;
+            color: var(--Button-label);
             border: none;
             border-radius: 6px;
             padding: 15px;
@@ -262,8 +269,8 @@
                         <span>VS</span>
                         <span>${match.away_team}</span>
                     </div>
-                    <div class="odds-display">
-                        <strong>Odds:</strong> Home: ${match.home_odds}, Draw: ${match.draw_odds}, Away: ${match.away_odds}
+                    <div class="odds-display" style="text-align: center;">
+                        <strong>Non-member odds:</strong> Home: ${match.home_odds}, Draw: ${match.draw_odds}, Away: ${match.away_odds}
                     </div>
                     <div class="bet-container">
                         <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1">
