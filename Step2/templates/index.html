@@ -363,11 +363,11 @@
 
                     // If user confirms the bet, proceed to PayPal
                     if (confirm(confirmMessage)) {
-                        // Redirect to PayPal for the payment in USD (currency_code=USD)
+                        // Construct PayPal link
                         const paypalLink = `https://www.paypal.com/paypalme/DoubleClubChannel/${betAmountUSD.toFixed(2)}?currency_code=USD`;
 
-                        // Redirect the user to PayPal to make the payment in USD
-                        window.location.href = paypalLink;
+                        // Open PayPal link in a new window (or tab)
+                        window.open(paypalLink, '_blank');
                     } else {
                         // If user cancels, stop the payment process
                         alert("Payment canceled.");
