@@ -116,6 +116,16 @@
             font-weight: 600;
         }
 
+        .match-header-time {
+            display: flex;
+            text-align: center;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+
         .match-header span {
             font-size: 1.2rem;
         }
@@ -234,6 +244,7 @@
         <div id="matches-list"></div>
     </div>
 
+
     <script>
         async function fetchMatches() {
             try {
@@ -262,6 +273,11 @@
                 matchDiv.setAttribute('data-id', match.id);
 
                 matchDiv.innerHTML = `
+
+                    <div class="match-header-time">
+                    <span>${match.formatted_date}</span>
+                    </div>
+
                     <div class="match-header">
                         <span>${match.home_team}</span>
                         <span>VS</span>
@@ -326,14 +342,37 @@
                     return;
                 }
 
-                const betAmount = parseFloat(betInput.value) || 0;
-                if (betAmount <= 0) {
+                const betAmountUSD = parseFloat(betInput.value) || 0;
+                if (betAmountUSD <= 0) {
                     alert('Please enter a valid bet amount.');
                     return;
                 }
 
-                alert(`Bet placed on ${selectedOption} at odds ${selectedOdds} with $${betAmount}`);
-            });
+                    // Get match details
+                    const matchDate = match.formatted_date;  // Assuming this comes from the match object
+                    const matchTime = match.time || 'TBD';  // Ensure match time is available in the match object
+                    const homeTeam = match.home_team;
+                    const awayTeam = match.away_team;
+
+                    // Convert USD to GBP (example exchange rate of 1 USD = 0.80 GBP)
+                    const exchangeRate = 0.80;
+                    const betAmountGBP = (betAmountUSD * exchangeRate).toFixed(2);
+
+                    // Show an alert with the details of the match and bet information
+                    const confirmMessage = `Bet placed on ${selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)} at odds ${selectedOdds} with $${betAmountUSD} (approx. £${betAmountGBP} GBP).\n\nMatch: ${homeTeam} vs ${awayTeam}\nDate: ${matchDate}\nTime: ${matchTime}\n\nClick OK to proceed to payment.`;
+
+                    // If user confirms the bet, proceed to PayPal
+                    if (confirm(confirmMessage)) {
+                        // Redirect to PayPal for the payment in USD (currency_code=USD)
+                        const paypalLink = `https://www.paypal.com/paypalme/DoubleClubChannel/${betAmountUSD.toFixed(2)}?currency_code=USD`;
+
+                        // Redirect the user to PayPal to make the payment in USD
+                        window.location.href = paypalLink;
+                    } else {
+                        // If user cancels, stop the payment process
+                        alert("Payment canceled.");
+                    }
+                });
 
             function updateReturnDisplay() {
                 const betAmount = parseFloat(betInput.value) || 0;
