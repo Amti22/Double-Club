@@ -1,5 +1,5 @@
 Match: LA Galaxy vs New York
-Start Date: 2024-12-07T20:00:00+00:00
+Start Date: 2024-12-09T14:57:00+00:00
 Sport: Football
 Home Odds: 1.8
 Draw Odds: 3.95
