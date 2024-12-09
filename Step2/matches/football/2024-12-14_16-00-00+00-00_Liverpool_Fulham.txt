@@ -1,0 +1,6 @@
+Match: Liverpool vs Fulham
+Start Date: 2024-12-14T16:00:00+01:00+00:00
+Sport: Football
+Home Odds: 1.86
+Draw Odds: 3.88
+Away Odds: 4.09
