@@ -1,6 +1,0 @@
-Match: Manchester City vs Manchester Utd
-Start Date: 2024-12-15T17:30:00+01:00+00:00
-Sport: Football
-Home Odds: 1.86
-Draw Odds: 3.88
-Away Odds: 4.09

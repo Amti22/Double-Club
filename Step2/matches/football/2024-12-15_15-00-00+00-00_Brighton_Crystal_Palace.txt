@@ -1,6 +1,0 @@
-Match: Brighton vs Crystal Palace
-Start Date: 2024-12-15T15:00:00+01:00+00:00
-Sport: Football
-Home Odds: 1.86
-Draw Odds: 3.88
-Away Odds: 4.09
