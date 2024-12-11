@@ -1,0 +1,6 @@
+Match: Motherwell W vs Rangers W
+Start Date: 2024-12-11T20:00:00+00:00
+Sport: Football
+Home Odds: 22.60
+Draw Odds: 10.48
+Away Odds: 1.05

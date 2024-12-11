@@ -1,0 +1,6 @@
+Match: Lille U19 vs Sturm Graz U19
+Start Date: 2024-12-11T12:00:00+00:00
+Sport: Football
+Home Odds: 1.91
+Draw Odds: 3.59
+Away Odds: 3.41

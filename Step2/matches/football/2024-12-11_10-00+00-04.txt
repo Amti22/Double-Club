@@ -1,0 +1,6 @@
+Match: Bidco United vs Police FC
+Start Date: 2024-12-11T10:00:00+00:00
+Sport: Football
+Home Odds: 2.51
+Draw Odds: 2.89
+Away Odds: 2.74
