@@ -1,0 +1,6 @@
+Match: Strasbourg W vs Nantes W
+Start Date: 2024-12-11T12:00:00+00:00
+Sport: Football
+Home Odds: 3.02
+Draw Odds: 2.82
+Away Odds: 2.40

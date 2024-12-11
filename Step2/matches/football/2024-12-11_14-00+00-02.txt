@@ -1,0 +1,6 @@
+Match: Chennaiyin vs Hyderabad
+Start Date: 2024-12-11T14:00:00+00:00
+Sport: Football
+Home Odds: 1.75
+Draw Odds: 3.68
+Away Odds: 4.25

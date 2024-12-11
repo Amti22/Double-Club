@@ -1,0 +1,6 @@
+Match: Manchester Utd W vs Newcastle Utd W
+Start Date: 2024-12-11T19:00:00+00:00
+Sport: Football
+Home Odds: 1.08
+Draw Odds: 8.66
+Away Odds: 18.62

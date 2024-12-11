@@ -1,0 +1,6 @@
+Match: Portsmouth W vs London City Lionesses W
+Start Date: 2024-12-11T19:00:00+00:00
+Sport: Football
+Home Odds: 14.01
+Draw Odds: 6.79
+Away Odds: 1.14

@@ -1,0 +1,6 @@
+Match: Sassuolo U19 vs Betis U19
+Start Date: 2024-12-11T17:00:00+00:00
+Sport: Football
+Home Odds: 2.51
+Draw Odds: 3.64
+Away Odds: 2.35

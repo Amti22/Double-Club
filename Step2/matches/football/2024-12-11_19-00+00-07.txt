@@ -1,0 +1,6 @@
+Match: Brighton W vs Bristol City W
+Start Date: 2024-12-11T19:00:00+00:00
+Sport: Football
+Home Odds: 1.28
+Draw Odds: 5.03
+Away Odds: 8.22

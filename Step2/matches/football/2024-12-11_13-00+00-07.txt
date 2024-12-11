@@ -1,0 +1,6 @@
+Match: Juventus U19 vs Manchester City U19
+Start Date: 2024-12-11T13:00:00+00:00
+Sport: Football
+Home Odds: 2.74
+Draw Odds: 3.36
+Away Odds: 2.34

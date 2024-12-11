@@ -1,0 +1,6 @@
+Match: Fenerbahce vs Ath Bilbao
+Start Date: 2024-12-11T15:30:00+00:00
+Sport: Football
+Home Odds: 2.44
+Draw Odds: 3.26
+Away Odds: 3.03

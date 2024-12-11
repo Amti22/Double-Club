@@ -1,0 +1,6 @@
+Match: Liverpool W vs Everton W
+Start Date: 2024-12-11T18:00:00+00:00
+Sport: Football
+Home Odds: 1.48
+Draw Odds: 4.60
+Away Odds: 4.90

@@ -1,0 +1,6 @@
+Match: Hoffenheim U19 vs Auxerre U19
+Start Date: 2024-12-11T18:00:00+00:00
+Sport: Football
+Home Odds: 1.67
+Draw Odds: 4.33
+Away Odds: 3.95

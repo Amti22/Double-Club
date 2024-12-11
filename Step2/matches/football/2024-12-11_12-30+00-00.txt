@@ -1,0 +1,6 @@
+Match: Gazelle vs Colombe
+Start Date: 2024-12-11T12:30:00+00:00
+Sport: Football
+Home Odds: 2.13
+Draw Odds: 3.04
+Away Odds: 3.30

@@ -1,0 +1,6 @@
+Match: Atl. Madrid vs Slovan Bratislava
+Start Date: 2024-12-11T17:45:00+00:00
+Sport: Football
+Home Odds: 1.06
+Draw Odds: 15.45
+Away Odds: 33.69

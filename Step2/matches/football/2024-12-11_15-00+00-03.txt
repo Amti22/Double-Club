@@ -1,0 +1,6 @@
+Match: Dortmund U19 vs Barcelona U19
+Start Date: 2024-12-11T15:00:00+00:00
+Sport: Football
+Home Odds: 2.69
+Draw Odds: 3.61
+Away Odds: 2.25
