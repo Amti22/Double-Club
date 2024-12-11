@@ -1,0 +1,6 @@
+Match: Boca Juniors W vs Banfield W
+Start Date: 2024-12-11T20:00:00+00:00
+Sport: Football
+Home Odds: 1.22
+Draw Odds: 5.47
+Away Odds: 9.90

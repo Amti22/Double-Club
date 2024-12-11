@@ -1,0 +1,6 @@
+Match: Hull vs Watford
+Start Date: 2024-12-11T19:45:00+00:00
+Sport: Football
+Home Odds: 2.25
+Draw Odds: 3.44
+Away Odds: 3.14
