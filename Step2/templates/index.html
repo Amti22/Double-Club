@@ -13,7 +13,7 @@
             color: #FFFFFF96;
             border: none;
             border-radius: 6px;
-            margin-bottom: 20px;
+            margin: 5px;
             width: 100%;
         }
 
@@ -122,12 +122,14 @@
             background-color: #2F3340; /* Match the background color of the match container */
             z-index: 101;
             padding: 20px; /* Matches padding of the match container */
-            margin: 0 auto 20px; /* Centered alignment and space at the bottom */
+            margin: 0 auto 20px; /* Center horizontally and add space at the bottom */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Matches the match container */
             border: 1px solid #3E4352; /* Matches the border of the match container */
             border-radius: 10px; /* Matches the border radius of the match container */
-            max-width: 750px; /* Matches the max-width of the container */
-            max-height: 80px; /* Matches the max-width of the container */
+            max-width: 750px; /* Matches the max-width of the match container */
+            display: flex; /* Use flexbox for alignment */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
         }
 
 
@@ -270,6 +272,8 @@
 </head>
 
 <body>
+
+overflow: hidden; /* Hides both horizontal and vertical scrollbars */
 
 <div class="filter-container">
     <select id="sport-filter" class="sport-dropdown">
