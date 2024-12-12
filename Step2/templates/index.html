@@ -152,7 +152,7 @@
         .match-header-time {
             display: flex;
             text-align: center;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             margin-bottom: 15px;
             font-weight: 600;
@@ -292,6 +292,7 @@
 
 
 <script>
+
     async function fetchSports() {
         try {
             const response = await fetch('/sports');  // Ensure your server has this endpoint
