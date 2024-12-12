@@ -182,9 +182,10 @@
             font-size: 1rem;
         }
 
+        /* Adjusting the button placement */
         .button-group {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr; /* Default */
             gap: 10px;
         }
 
@@ -208,6 +209,10 @@
             background-color: var(--accent-blue);
             border-color: var(--accent-blue);
             color: var(--Button-label);
+        }
+
+        .button-group button:last-child {
+            grid-column: ${hideDrawOption ? '2' : '3'}; /* Move Away button to the right when Draw is missing */
         }
 
         .return-display {
@@ -335,6 +340,9 @@
             matchDiv.classList.add('match-container');
             matchDiv.setAttribute('data-id', match.id);
 
+            // Check if draw odds are 0, and hide draw button and odds if so
+            const hideDrawOption = match.draw_odds === 0;
+
             matchDiv.innerHTML = `
                 <div class="match-header-time">
                     <span>${match.formatted_date}</span>
@@ -345,13 +353,13 @@
                     <span>${match.away_team}</span>
                 </div>
                 <div class="odds-display" style="text-align: center;">
-                    <strong></strong> Home: ${match.home_odds}, Draw: ${match.draw_odds}, Away: ${match.away_odds}
+                    <strong></strong> Home: ${match.home_odds}, ${hideDrawOption ? '' : `Draw: ${match.draw_odds},`} Away: ${match.away_odds}
                 </div>
                 <div class="bet-container">
                     <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1">
-                    <div class="button-group">
+                    <div class="button-group" style="display: grid; grid-template-columns: ${hideDrawOption ? '1fr 1fr' : '1fr 1fr 1fr'};">
                         <button class="home-btn">Home</button>
-                        <button class="draw-btn">Draw</button>
+                        ${hideDrawOption ? '' : `<button class="draw-btn">Draw</button>`}
                         <button class="away-btn">Away</button>
                     </div>
                 </div>
@@ -364,6 +372,8 @@
             attachListeners(matchDiv, match);
         });
     }
+
+
 
     function attachListeners(matchDiv, match) {
         const betInput = matchDiv.querySelector('.bet-amount');
