@@ -1,6 +1,0 @@
-Match: West Brom vs Coventry
-Start Date: 2024-12-11T20:00:00+00:00
-Sport: Football
-Home Odds: 2.47
-Draw Odds: 3.21
-Away Odds: 2.96

@@ -1,6 +1,0 @@
-Match: Ceramica Cleopatra vs National Bank Egypt
-Start Date: 2024-12-11T18:00:00+00:00
-Sport: Football
-Home Odds: 1.81
-Draw Odds: 3.24
-Away Odds: 4.37

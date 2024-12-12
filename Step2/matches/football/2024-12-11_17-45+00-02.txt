@@ -1,6 +1,0 @@
-Match: Wolfsburg W vs AS Roma W
-Start Date: 2024-12-11T17:45:00+00:00
-Sport: Football
-Home Odds: 1.44
-Draw Odds: 4.60
-Away Odds: 5.97

@@ -1,6 +1,0 @@
-Match: Dortmund vs Barcelona
-Start Date: 2024-12-11T20:00:00+00:00
-Sport: Football
-Home Odds: 3.23
-Draw Odds: 3.97
-Away Odds: 2.09

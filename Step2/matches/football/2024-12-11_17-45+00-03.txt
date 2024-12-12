@@ -1,6 +1,0 @@
-Match: Galatasaray W vs Lyon W
-Start Date: 2024-12-11T17:45:00+00:00
-Sport: Football
-Home Odds: 44.64
-Draw Odds: 19.76
-Away Odds: 1.01

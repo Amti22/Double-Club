@@ -1,6 +1,0 @@
-Match: Leixoes U23 vs Academico Viseu U23
-Start Date: 2024-12-11T11:00:00+00:00
-Sport: Football
-Home Odds: 3.25
-Draw Odds: 3.71
-Away Odds: 1.99

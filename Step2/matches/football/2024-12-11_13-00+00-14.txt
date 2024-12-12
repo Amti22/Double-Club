@@ -1,6 +1,0 @@
-Match: Nea Amisou vs PAOK Kristonis
-Start Date: 2024-12-11T13:00:00+00:00
-Sport: Football
-Home Odds: 20.00
-Draw Odds: 9.00
-Away Odds: 1.13

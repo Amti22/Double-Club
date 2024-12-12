@@ -1,6 +1,0 @@
-Match: Midtjylland U19 vs Legia U19
-Start Date: 2024-12-11T17:00:00+00:00
-Sport: Football
-Home Odds: 1.27
-Draw Odds: 5.60
-Away Odds: 8.06

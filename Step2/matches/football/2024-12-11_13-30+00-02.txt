@@ -1,6 +1,0 @@
-Match: Abu Salim vs Olympic Azzaweya
-Start Date: 2024-12-11T13:30:00+00:00
-Sport: Football
-Home Odds: 2.70
-Draw Odds: 3.30
-Away Odds: 2.53

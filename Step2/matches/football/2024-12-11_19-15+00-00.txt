@@ -1,6 +1,0 @@
-Match: Aston Villa W vs Charlton W
-Start Date: 2024-12-11T19:15:00+00:00
-Sport: Football
-Home Odds: 1.19
-Draw Odds: 5.81
-Away Odds: 11.08

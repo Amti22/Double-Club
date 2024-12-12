@@ -1,6 +1,0 @@
-Match: Crystal Palace W vs Tottenham W
-Start Date: 2024-12-11T19:00:00+00:00
-Sport: Football
-Home Odds: 4.30
-Draw Odds: 4.09
-Away Odds: 1.60

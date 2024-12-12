@@ -1,6 +1,0 @@
-Match: Lille vs Sturm Graz
-Start Date: 2024-12-11T17:45:00+00:00
-Sport: Football
-Home Odds: 1.48
-Draw Odds: 4.52
-Away Odds: 6.75

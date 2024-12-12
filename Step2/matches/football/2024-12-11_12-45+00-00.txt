@@ -1,6 +1,0 @@
-Match: Malavan vs Persepolis
-Start Date: 2024-12-11T12:45:00+00:00
-Sport: Football
-Home Odds: 5.85
-Draw Odds: 2.94
-Away Odds: 1.68

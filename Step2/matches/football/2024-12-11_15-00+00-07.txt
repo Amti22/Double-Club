@@ -1,6 +1,0 @@
-Match: Valadares Gaia W vs Famalicao W
-Start Date: 2024-12-11T15:00:00+00:00
-Sport: Football
-Home Odds: 1.37
-Draw Odds: 4.32
-Away Odds: 6.93

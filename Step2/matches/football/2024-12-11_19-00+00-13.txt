@@ -1,6 +1,0 @@
-Match: Vall de Uxo vs Soneja
-Start Date: 2024-12-11T19:00:00+00:00
-Sport: Football
-Home Odds: 1.99
-Draw Odds: 2.97
-Away Odds: 3.64

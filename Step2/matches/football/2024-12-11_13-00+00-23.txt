@@ -1,6 +1,0 @@
-Match: Aris Petroupolis vs Nea I.
-Start Date: 2024-12-11T13:00:00+00:00
-Sport: Football
-Home Odds: 1.62
-Draw Odds: 3.10
-Away Odds: 6.06

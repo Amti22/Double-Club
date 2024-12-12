@@ -1,6 +1,0 @@
-Match: Oriente Petrolero vs Always Ready
-Start Date: 2024-12-11T00:30:00+00:00
-Sport: Football
-Home Odds: 2.37
-Draw Odds: 3.25
-Away Odds: 2.92

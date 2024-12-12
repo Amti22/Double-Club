@@ -1,6 +1,0 @@
-Match: ASFA Yennega vs USFA
-Start Date: 2024-12-11T15:30:00+00:00
-Sport: Football
-Home Odds: 2.80
-Draw Odds: 2.80
-Away Odds: 2.56

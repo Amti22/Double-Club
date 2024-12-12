@@ -1,6 +1,0 @@
-Match: Deira vs Olympic S.
-Start Date: 2024-12-11T13:00:00+00:00
-Sport: Football
-Home Odds: 3.14
-Draw Odds: 3.06
-Away Odds: 2.21

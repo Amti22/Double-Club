@@ -1,6 +1,0 @@
-Match: Haras El Hodood vs El Ismaily
-Start Date: 2024-12-11T15:00:00+00:00
-Sport: Football
-Home Odds: 3.10
-Draw Odds: 2.54
-Away Odds: 2.72

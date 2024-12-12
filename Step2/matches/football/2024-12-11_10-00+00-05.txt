@@ -1,6 +1,0 @@
-Match: Vihiga United vs Mombasa Stars
-Start Date: 2024-12-11T10:00:00+00:00
-Sport: Football
-Home Odds: 1.95
-Draw Odds: 3.02
-Away Odds: 3.85

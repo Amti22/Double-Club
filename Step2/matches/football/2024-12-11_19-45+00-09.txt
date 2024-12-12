@@ -1,6 +1,0 @@
-Match: East Stirlingshire vs Caledonian Braves
-Start Date: 2024-12-11T19:45:00+00:00
-Sport: Football
-Home Odds: 2.95
-Draw Odds: 3.54
-Away Odds: 2.06

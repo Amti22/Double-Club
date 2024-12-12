@@ -1,6 +1,0 @@
-Match: Leopards vs Tusker
-Start Date: 2024-12-11T13:00:00+00:00
-Sport: Football
-Home Odds: 2.83
-Draw Odds: 2.93
-Away Odds: 2.44

@@ -1,6 +1,0 @@
-Match: Enyimba vs Sunshine Stars
-Start Date: 2024-12-11T15:00:00+00:00
-Sport: Football
-Home Odds: 1.41
-Draw Odds: 3.68
-Away Odds: 7.77

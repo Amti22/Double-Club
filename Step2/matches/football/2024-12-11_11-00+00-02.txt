@@ -1,6 +1,0 @@
-Match: Lok. Zagreb U19 vs F. Constanta U19
-Start Date: 2024-12-11T11:00:00+00:00
-Sport: Football
-Home Odds: 1.59
-Draw Odds: 4.15
-Away Odds: 4.44

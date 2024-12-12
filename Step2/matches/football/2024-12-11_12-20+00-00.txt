@@ -1,6 +1,0 @@
-Match: Al Jandal vs Abha
-Start Date: 2024-12-11T12:20:00+00:00
-Sport: Football
-Home Odds: 2.79
-Draw Odds: 3.29
-Away Odds: 2.35

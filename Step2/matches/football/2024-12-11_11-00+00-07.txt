@@ -1,6 +1,0 @@
-Match: Getafe W vs Barcelona B W
-Start Date: 2024-12-11T11:00:00+00:00
-Sport: Football
-Home Odds: 6.83
-Draw Odds: 4.26
-Away Odds: 1.36

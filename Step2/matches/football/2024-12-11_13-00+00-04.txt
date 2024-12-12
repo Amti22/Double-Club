@@ -1,6 +1,0 @@
-Match: Atl. Madrid U19 vs Slovan Bratislava U19
-Start Date: 2024-12-11T13:00:00+00:00
-Sport: Football
-Home Odds: 1.06
-Draw Odds: 11.67
-Away Odds: 23.05

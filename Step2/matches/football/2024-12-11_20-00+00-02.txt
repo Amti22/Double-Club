@@ -1,6 +1,0 @@
-Match: Juventus vs Manchester City
-Start Date: 2024-12-11T20:00:00+00:00
-Sport: Football
-Home Odds: 3.93
-Draw Odds: 3.52
-Away Odds: 1.99

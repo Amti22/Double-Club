@@ -1,6 +1,0 @@
-Match: Vizela U23 vs Braga U23
-Start Date: 2024-12-11T15:00:00+00:00
-Sport: Football
-Home Odds: 2.42
-Draw Odds: 3.26
-Away Odds: 2.74

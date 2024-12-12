@@ -1,6 +1,0 @@
-Match: West Ham W vs Southampton W
-Start Date: 2024-12-11T19:00:00+00:00
-Sport: Football
-Home Odds: 1.51
-Draw Odds: 3.95
-Away Odds: 5.35

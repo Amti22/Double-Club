@@ -1,6 +1,0 @@
-Match: Mandraikos vs AO Tympakiou
-Start Date: 2024-12-11T13:00:00+00:00
-Sport: Football
-Home Odds: 1.53
-Draw Odds: 3.58
-Away Odds: 5.54

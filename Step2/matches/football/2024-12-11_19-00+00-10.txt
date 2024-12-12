@@ -1,6 +1,0 @@
-Match: Hostert vs Rodange
-Start Date: 2024-12-11T19:00:00+00:00
-Sport: Football
-Home Odds: 1.52
-Draw Odds: 4.35
-Away Odds: 4.78

@@ -1,6 +1,0 @@
-Match: Chelsea W vs Twente W
-Start Date: 2024-12-11T20:00:00+00:00
-Sport: Football
-Home Odds: 1.03
-Draw Odds: 13.32
-Away Odds: 35.44

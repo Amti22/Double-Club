@@ -1,6 +1,0 @@
-Match: Thermaikos FC vs Krya Vrysi
-Start Date: 2024-12-11T13:00:00+00:00
-Sport: Football
-Home Odds: 2.40
-Draw Odds: 3.01
-Away Odds: 2.84

@@ -1,6 +1,0 @@
-Match: Castellonense vs Castellon B
-Start Date: 2024-12-11T18:00:00+00:00
-Sport: Football
-Home Odds: 2.11
-Draw Odds: 3.16
-Away Odds: 3.08

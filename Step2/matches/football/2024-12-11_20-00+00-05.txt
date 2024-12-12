@@ -1,6 +1,0 @@
-Match: Benfica vs Bologna
-Start Date: 2024-12-11T20:00:00+00:00
-Sport: Football
-Home Odds: 1.49
-Draw Odds: 4.47
-Away Odds: 6.76

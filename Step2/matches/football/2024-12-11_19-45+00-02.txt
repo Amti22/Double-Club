@@ -1,6 +1,0 @@
-Match: QPR vs Oxford Utd
-Start Date: 2024-12-11T19:45:00+00:00
-Sport: Football
-Home Odds: 1.98
-Draw Odds: 3.41
-Away Odds: 3.92

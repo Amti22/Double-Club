@@ -1,6 +1,0 @@
-Match: Partick Thistle W vs Spartans W
-Start Date: 2024-12-11T19:45:00+00:00
-Sport: Football
-Home Odds: 1.43
-Draw Odds: 4.32
-Away Odds: 5.95

@@ -1,6 +1,0 @@
-Match: Gor Mahia vs Shabana
-Start Date: 2024-12-11T13:00:00+00:00
-Sport: Football
-Home Odds: 1.77
-Draw Odds: 3.29
-Away Odds: 4.21

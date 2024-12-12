@@ -1,6 +1,0 @@
-Match: Chinese Taipei vs Mongolia
-Start Date: 2024-12-11T12:00:00+00:00
-Sport: Football
-Home Odds: 1.14
-Draw Odds: 6.67
-Away Odds: 15.93

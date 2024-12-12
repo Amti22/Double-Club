@@ -1,6 +1,0 @@
-Match: Kyanos A. V. vs Atsalenios
-Start Date: 2024-12-11T13:00:00+00:00
-Sport: Football
-Home Odds: 1.82
-Draw Odds: 3.50
-Away Odds: 3.67

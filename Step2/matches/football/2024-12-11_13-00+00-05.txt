@@ -1,6 +1,0 @@
-Match: AC Milan U19 vs Crvena zvezda U19
-Start Date: 2024-12-11T13:00:00+00:00
-Sport: Football
-Home Odds: 1.33
-Draw Odds: 4.97
-Away Odds: 7.30

@@ -1,6 +1,0 @@
-Match: Modern Sport vs Petrojet
-Start Date: 2024-12-11T18:00:00+00:00
-Sport: Football
-Home Odds: 1.64
-Draw Odds: 3.34
-Away Odds: 5.21

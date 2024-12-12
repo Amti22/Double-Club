@@ -1,6 +1,0 @@
-Match: Torrent vs Espanyol B
-Start Date: 2024-12-11T18:30:00+00:00
-Sport: Football
-Home Odds: 2.08
-Draw Odds: 2.98
-Away Odds: 3.63

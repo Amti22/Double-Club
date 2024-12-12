@@ -1,6 +1,0 @@
-Match: U. Magdalena vs Llaneros
-Start Date: 2024-12-11T00:00:00+00:00
-Sport: Football
-Home Odds: 1.73
-Draw Odds: 3.21
-Away Odds: 5.49

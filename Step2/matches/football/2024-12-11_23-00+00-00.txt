@@ -1,6 +1,0 @@
-Match: Aurora vs Royal Pari
-Start Date: 2024-12-11T23:00:00+00:00
-Sport: Football
-Home Odds: 1.29
-Draw Odds: 5.01
-Away Odds: 10.00
