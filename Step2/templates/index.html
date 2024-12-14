@@ -7,39 +7,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
 
-    /* Fixed container for dropdowns */
-    .dropdown-container {
-        display: flex;
-        flex-direction: column; /* Stack dropdowns vertically */
-        align-items: center;    /* Horizontally center dropdowns */
-        position: fixed;        /* Fixed position to stay on top */
-        top: 10px;              /* Distance from the top of the viewport */
-        left: 50%;              /* Center horizontally */
-        transform: translateX(-50%); /* Offset left for proper centering */
-        z-index: 1000;          /* Ensure it's above other content */
-        background-color: rgba(30, 30, 30, 0.9); /* Optional: Add a background for visibility */
-        padding: 10px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for better visibility */
+/* Dropdown container to stack the dropdowns vertically */
+.dropdown-container {
+    display: flex;
+    flex-direction: column; /* Stacks dropdowns vertically */
+    align-items: center;    /* Center-aligns the dropdowns */
+    position: fixed;        /* Fixed position to keep them on top */
+    top: 10px;              /* Distance from the top of the page */
+    left: 50%;              /* Center horizontally */
+    transform: translateX(-50%); /* Proper horizontal centering */
+    z-index: 1000;          /* Keep above other elements */
+    width: 80%;             /* Adjust width relative to screen size (or container) */
+    max-width: 1200px;      /* Set a max-width to prevent it from growing too large */
+    background-color: rgba(30, 30, 30, 0.9); /* Optional background for visibility */
+    padding: 10px;          /* Add padding around the dropdowns */
+    border-radius: 8px;     /* Rounded corners for style */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+/* Dropdown styling */
+.sport-dropdown {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #3E4352;
+    color: #FFFFFF96;
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 10px; /* Adds space between dropdowns */
+    width: 100%;         /* Full width inside container */
+    text-align: center;  /* Centers text inside dropdown */
+    text-align-last: center; /* Centers the dropdown options */
+}
+
+    .fixed-dropdown {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%); /* This will center it horizontally */
+        max-width: 800px;
+        padding: 40px 20px;
+        z-index: 1000;
+        margin: 0 auto;
     }
-
-    /* Styling for the dropdowns */
-    .sport-dropdown {
-        padding: 10px;
-        font-size: 1rem;
-        background-color: #3E4352;
-        color: #FFFFFF96;
-        border: none;
-        border-radius: 6px;
-        margin-bottom: 10px; /* Space between dropdowns */
-        width: 100%; /* Full width inside the container */
-        max-width: 400px; /* Constrain width for better appearance */
-        text-align: center; /* Horizontal text alignment */
-        text-align-last: center; /* Ensures dropdown options are also centered */
-        box-sizing: border-box;
-    }
-
-
 
         :root {
             --primary-black: #FFFFFF96;
@@ -301,7 +309,7 @@
 
 <body>
 
-<div class="dropdown-container">
+<div class="fixed-dropdown">
     <!-- Sport Filter Dropdown -->
     <select id="sport-filter" class="sport-dropdown">
         <option value="">Select Sport</option>
@@ -403,6 +411,23 @@
             });
         }
 
+        // Assuming your match container has a class of 'match-container'
+        window.addEventListener('resize', adjustDropdownWidth); // Adjust on resize
+
+        function adjustDropdownWidth() {
+            const matchContainer = document.querySelector('.match-container'); // Match container
+            const dropdownContainer = document.querySelector('.dropdown-container'); // Dropdown container
+
+            if (matchContainer && dropdownContainer) {
+                // Set the width of the dropdown container to match the match container's width
+                dropdownContainer.style.width = `${matchContainer.offsetWidth}px`;
+            }
+        }
+
+        // Initial adjustment on page load
+        adjustDropdownWidth();
+
+
         function adjustDropdownWidth() {
             const matchContainer = document.querySelector('.match-container'); // Reference match container
             const dropdowns = document.querySelectorAll('.sport-dropdown'); // Reference all dropdowns
@@ -416,11 +441,9 @@
             }
         }
 
-// Adjust width on page load
-window.addEventListener('load', adjustDropdownWidth);
-
-// Adjust width on window resize
-window.addEventListener('resize', adjustDropdownWidth);
+        // Adjust on page load and window resize
+        window.addEventListener('load', adjustDropdownWidth);
+        window.addEventListener('resize', adjustDropdownWidth);
 
         function attachListeners(matchDiv, match) {
             const betInput = matchDiv.querySelector('.bet-amount');
