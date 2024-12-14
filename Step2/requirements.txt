@@ -1,5 +1,5 @@
-Flask==2.0.1
+Flask==2.2.3
 werkzeug==2.0.3
 gunicorn==20.1.0
 flask-cors==5.0.0
-pytz==2024.x
+pytz==2024.1  # or another specific version like pytz>=2024.1
