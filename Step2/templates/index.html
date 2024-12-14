@@ -6,16 +6,38 @@
     <title>Football Betting Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        .sport-dropdown {
-            padding: 10px;
-            font-size: 1rem;
-            background-color: #3E4352;
-            color: #FFFFFF96;
-            border: none;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            width: 100%;
-        }
+
+    /* Fixed container for dropdowns */
+    .dropdown-container {
+        display: flex;
+        flex-direction: column; /* Stack dropdowns vertically */
+        align-items: center;    /* Horizontally center dropdowns */
+        position: fixed;        /* Fixed position to stay on top */
+        top: 10px;              /* Distance from the top of the viewport */
+        left: 50%;              /* Center horizontally */
+        transform: translateX(-50%); /* Offset left for proper centering */
+        z-index: 1000;          /* Ensure it's above other content */
+        background-color: rgba(30, 30, 30, 0.9); /* Optional: Add a background for visibility */
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for better visibility */
+    }
+
+    /* Styling for the dropdowns */
+    .sport-dropdown {
+        padding: 10px;
+        font-size: 1rem;
+        background-color: #3E4352;
+        color: #FFFFFF96;
+        border: none;
+        border-radius: 6px;
+        margin-bottom: 10px; /* Space between dropdowns */
+        width: 100%; /* Full width inside the container */
+        max-width: 400px; /* Constrain width for better appearance */
+        text-align: center; /* Horizontal text alignment */
+        text-align-last: center; /* Ensures dropdown options are also centered */
+        box-sizing: border-box;
+    }
 
 
 
@@ -279,9 +301,21 @@
 
 <body>
 
-<select id="sport-filter" class="sport-dropdown">
-    <option value="">Select Sport</option>
-</select>
+<div class="dropdown-container">
+    <!-- Sport Filter Dropdown -->
+    <select id="sport-filter" class="sport-dropdown">
+        <option value="">Select Sport</option>
+    </select>
+
+    <!-- Bet Option Dropdown -->
+    <select id="universal-bet-option" class="sport-dropdown">
+        <option value="1X2" selected>1X2</option>
+        <option value="BTS">BTS</option>
+        <option value="DNB">DNB</option>
+        <option value="DC">DC</option>
+        <option value="OU">OU</option>
+    </select>
+</div>
 
 <div class="container">
     <h1 class="section-title"></h1>
@@ -290,319 +324,122 @@
 
 
 <script>
-    async function fetchSports() {
-        try {
-            const response = await fetch('/sports');
-            if (!response.ok) throw new Error('Error fetching sports');
+        async function fetchSports() {
+            try {
+                const response = await fetch('/sports');
+                if (!response.ok) throw new Error('Error fetching sports');
 
-            const sports = await response.json();
-            const sportFilter = document.getElementById('sport-filter');
+                const sports = await response.json();
+                const sportFilter = document.getElementById('sport-filter');
 
-            sports.forEach(sport => {
-                const option = document.createElement('option');
-                option.value = sport;
-                option.textContent = sport.charAt(0).toUpperCase() + sport.slice(1);
-                sportFilter.appendChild(option);
-            });
-        } catch (error) {
-            console.error(error);
-            alert('Could not load sports at this time. Please try again later.');
-        }
-    }
-
-    async function fetchMatches() {
-        const sport = document.getElementById('sport-filter').value;
-        const url = sport ? `/matches?sport=${sport}` : '/matches';
-
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Error fetching matches');
-
-            const matches = await response.json();
-            if (matches.length > 0) {
-                renderMatches(matches);
-            } else {
-                document.getElementById('matches-list').innerHTML = '<p>No matches available</p>';
+                sports.forEach(sport => {
+                    const option = document.createElement('option');
+                    option.value = sport;
+                    option.textContent = sport.charAt(0).toUpperCase() + sport.slice(1);
+                    sportFilter.appendChild(option);
+                });
+            } catch (error) {
+                console.error(error);
+                alert('Could not load sports at this time. Please try again later.');
             }
-        } catch (error) {
-            console.error(error);
-            document.getElementById('matches-list').innerHTML = '<p>Failed to load matches. Please try again later.</p>';
-        }
-    }
-
-    function renderMatches(matches) {
-    const matchesList = document.getElementById('matches-list');
-    matchesList.innerHTML = '';
-
-    matches.forEach(match => {
-        const matchDiv = document.createElement('div');
-        matchDiv.classList.add('match-container');
-        matchDiv.setAttribute('data-id', match.id);
-
-        matchDiv.innerHTML = `
-            <div class="match-header-time">
-                <span>${match.formatted_date}</span>
-            </div>
-            <div class="match-header">
-                <span>${match.home_team}</span>
-                <span>VS</span>
-                <span>${match.away_team}</span>
-            </div>
-            <div class="odds-display" style="text-align: center;">
-                <strong></strong> Home: ${match.odds.home_odds}, Draw: ${match.odds.draw_odds}, Away: ${match.odds.away_odds}
-            </div>
-            <div class="bet-container">
-                <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1">
-                <div class="button-group">
-                    <button class="home-btn">Home</button>
-                    <button class="draw-btn">Draw</button>
-                    <button class="away-btn">Away</button>
-                </div>
-                <!-- Betting Option Dropdown -->
-                <select class="bet-option-dropdown">
-                    <option value="1X2" selected>1X2</option>  <!-- Default selected -->
-                    <option value="BTS">BTS</option>
-                    <option value="DNB">DNB</option>
-                    <option value="DC">DC</option>
-                    <option value="OU">OU</option>
-                </select>
-            </div>
-            <div class="return-display">Expected Return: $0</div>
-            <div class="membership-return">Double-Club Membership Return: $0</div>
-            <button class="buy-button" style="display: none;">Place Bet</button>
-        `;
-
-        matchesList.appendChild(matchDiv);
-        attachListeners(matchDiv, match);
-    });
-}
-
-
-    function attachListeners(matchDiv, match) {
-        const betInput = matchDiv.querySelector('.bet-amount');
-        const returnDisplay = matchDiv.querySelector('.return-display');
-        const membershipReturnDisplay = matchDiv.querySelector('.membership-return');
-        const buyButton = matchDiv.querySelector('.buy-button');
-        const betOptionDropdown = matchDiv.querySelector('.bet-option-dropdown');
-
-        let selectedOption = null;
-        let selectedOdds = null;
-
-        betInput.addEventListener('input', updateReturnDisplay);
-        betOptionDropdown.addEventListener('change', handleBetOptionChange);
-
-        // Handle Yes/No buttons for BTS
-        matchDiv.querySelectorAll('.bts-yes-btn, .bts-no-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                if (button.classList.contains('bts-yes-btn')) {
-                    selectedOption = 'yes';
-                    selectedOdds = match.odds.bts_yes;
-                } else if (button.classList.contains('bts-no-btn')) {
-                    selectedOption = 'no';
-                    selectedOdds = match.odds.bts_no;
-                }
-
-                updateReturnDisplay();
-            });
-        });
-
-        // Handle 1/2 buttons for DNB
-        matchDiv.querySelectorAll('.dnb-1-btn, .dnb-2-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                if (button.classList.contains('dnb-1-btn')) {
-                    selectedOption = '1';
-                    selectedOdds = match.odds.dnb_1;
-                } else if (button.classList.contains('dnb-2-btn')) {
-                    selectedOption = '2';
-                    selectedOdds = match.odds.dnb_2;
-                }
-
-                updateReturnDisplay();
-            });
-        });
-
-
-        // Handle 3 buttons for DC
-        matchDiv.querySelectorAll('.dc-1x-btn, .dc-12x-btn, .dc-x2-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                if (button.classList.contains('dc-1x-btn')) {
-                    selectedOption = '1x';
-                    selectedOdds = match.odds.dc_1x;
-                } else if (button.classList.contains('dc-12-btn')) {
-                    selectedOption = '12';
-                    selectedOdds = match.odds.dc_12;
-                }else if (button.classList.contains('dc-x2-btn')) {
-                    selectedOption = 'x2';
-                    selectedOdds = match.odds.dc_s2;
-                }
-
-                updateReturnDisplay();
-            });
-        });
-
-
-        // Handle 3 buttons for O/U
-        matchDiv.querySelectorAll('.dc-1x-btn, .dc-12x-btn, .dc-x2-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                if (button.classList.contains('dc-1x-btn')) {
-                    selectedOption = '1x';
-                    selectedOdds = match.odds.dc_1x;
-                } else if (button.classList.contains('dc-12-btn')) {
-                    selectedOption = '12';
-                    selectedOdds = match.odds.dc_12;
-                }else if (button.classList.contains('dc-x2-btn')) {
-                    selectedOption = 'x2';
-                    selectedOdds = match.odds.dc_s2;
-                }
-
-                updateReturnDisplay();
-            });
-        });
-
-        // Handle Home, Draw, Away buttons
-        matchDiv.querySelectorAll('.home-btn, .draw-btn, .away-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                if (button.classList.contains('home-btn')) {
-                    selectedOption = 'home';
-                    selectedOdds = match.odds.home_odds;
-                } else if (button.classList.contains('draw-btn')) {
-                    selectedOption = 'draw';
-                    selectedOdds = match.odds.draw_odds;
-                } else if (button.classList.contains('away-btn')) {
-                    selectedOption = 'away';
-                    selectedOdds = match.odds.away_odds;
-                }
-
-                updateReturnDisplay();
-            });
-        });
-
-        buyButton.addEventListener('click', () => {
-            if (!selectedOption || !selectedOdds) {
-                alert('Please select an option before buying.');
-                return;
-            }
-
-            const betAmountUSD = parseFloat(betInput.value) || 0;
-            if (betAmountUSD <= 0) {
-                alert('Please enter a valid bet amount.');
-                return;
-            }
-
-            const matchDate = match.formatted_date;
-            const homeTeam = match.home_team;
-            const awayTeam = match.away_team;
-
-            const exchangeRate = 0.80;
-            const betAmountGBP = (betAmountUSD * exchangeRate).toFixed(2);
-
-            const confirmMessage = `Bet placed on ${selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)} at odds ${selectedOdds} with $${betAmountUSD} (approx. £${betAmountGBP} GBP).\n\nMatch: ${homeTeam} vs ${awayTeam}\nDate: ${matchDate}\n\nClick OK to proceed to payment.`;
-
-            if (confirm(confirmMessage)) {
-                const paypalLink = `https://www.paypal.com/paypalme/DoubleClubChannel/${betAmountUSD.toFixed(2)}?currency_code=USD`;
-                window.open(paypalLink, '_blank');
-            } else {
-                alert("Payment canceled.");
-            }
-        });
-
-        function handleBetOptionChange() {
-            const selectedBetOption = betOptionDropdown.value;
-
-            if (selectedBetOption === 'BTS') {
-                // Replace the Home, Draw, Away buttons with Yes/No buttons
-                matchDiv.querySelector('.button-group').innerHTML = `
-                    <button class="bts-yes-btn">Yes</button>
-                    <button class="bts-no-btn">No</button>
-                `;
-
-                // Update the odds display for BTS (Yes/No)
-                matchDiv.querySelector('.odds-display').innerHTML = `BTS Yes: ${match.odds.bts_yes}, BTS No: ${match.odds.bts_no}`;
-
-                // Clear previous odds as we're switching bet types
-                selectedOdds = null;
-
-                // Reattach event listeners for the new Yes/No buttons
-                attachBTSListeners(matchDiv);
-
-            } else if (selectedBetOption === 'DNB') {
-                // Replace the Home, Draw, Away buttons with 1/2 buttons
-                matchDiv.querySelector('.button-group').innerHTML = `
-                    <button class="dnb-1-btn">1</button>
-                    <button class="dnb-2-btn">2</button>
-                `;
-
-                // Update the odds display for DNB (1/2)
-                matchDiv.querySelector('.odds-display').innerHTML = `DNB 1: ${match.odds.dnb_1}, DNB 2: ${match.odds.dnb_2}`;
-
-                // Clear previous odds as we're switching bet types
-                selectedOdds = null;
-
-                // Reattach event listeners for the new 1/2 buttons
-                attachDNBListeners(matchDiv);
-
-            } else if (selectedBetOption === 'DC') {
-                // Replace the current buttons with DC ones
-                matchDiv.querySelector('.button-group').innerHTML = `
-                    <button class="dc-1x-btn">1x</button>
-                    <button class="dc-12-btn">12</button>
-                    <button class="dc-x2-btn">x2</button>
-                `;
-
-                // Update the odds display for DC (1X/12/X2)
-                matchDiv.querySelector('.odds-display').innerHTML = `DC 1X: ${match.odds.dc_1x}, DC 12: ${match.odds.dc_12}, DC x2: ${match.odds.dc_x2}`;
-
-                // Clear previous odds as we're switching bet types
-                selectedOdds = null;
-
-                // Reattach event listeners for the new 1x/12/x2 buttons
-                attachDCListeners(matchDiv);
-
-            } else {
-                // Revert to the default 1X2 buttons (Home, Draw, Away)
-                matchDiv.querySelector('.button-group').innerHTML = `
-                    <button class="home-btn">Home</button>
-                    <button class="draw-btn">Draw</button>
-                    <button class="away-btn">Away</button>
-                `;
-
-                // Update the odds display for 1X2 (Home, Draw, Away)
-                matchDiv.querySelector('.odds-display').innerHTML = `Home: ${match.odds.home_odds}, Draw: ${match.odds.draw_odds}, Away: ${match.odds.away_odds}`;
-
-                // Set the selected odds based on the previous button selection
-                if (selectedOption === 'home') {
-                    selectedOdds = match.odds.home_odds;
-                } else if (selectedOption === 'draw') {
-                    selectedOdds = match.odds.draw_odds;
-                } else if (selectedOption === 'away') {
-                    selectedOdds = match.odds.away_odds;
-                }
-
-                // Reattach event listeners for the Home, Draw, Away buttons
-                attach1X2Listeners(matchDiv);
-            }
-
-            // Recalculate the expected return based on new bet option
-            updateReturnDisplay();
         }
 
-            // Function to attach event listeners for Home, Draw, Away buttons
-        function attach1X2Listeners(matchDiv) {
+        async function fetchMatches() {
+            const sport = document.getElementById('sport-filter').value;
+            const url = sport ? `/matches?sport=${sport}` : '/matches';
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Error fetching matches');
+
+                const matches = await response.json();
+                if (matches.length > 0) {
+                    renderMatches(matches);
+                } else {
+                    document.getElementById('matches-list').innerHTML = '<p>No matches available</p>';
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('matches-list').innerHTML = '<p>Failed to load matches. Please try again later.</p>';
+            }
+        }
+
+        function renderMatches(matches) {
+            const matchesList = document.getElementById('matches-list');
+            matchesList.innerHTML = '';
+
+            matches.forEach(match => {
+                const matchDiv = document.createElement('div');
+                matchDiv.classList.add('match-container');
+                matchDiv.setAttribute('data-id', match.id);
+
+                matchDiv.innerHTML = `
+                    <div class="match-header-time">
+                        <span>${match.formatted_date}</span>
+                    </div>
+                    <div class="match-header">
+                        <span>${match.home_team}</span>
+                        <span>VS</span>
+                        <span>${match.away_team}</span>
+                    </div>
+                    <div class="odds-display">
+                        <strong></strong> Home: ${match.odds.home_odds}, Draw: ${match.odds.draw_odds}, Away: ${match.odds.away_odds}
+                    </div>
+                    <div class="bet-container">
+                        <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1">
+                        <div class="button-group">
+                            <button class="home-btn">Home</button>
+                            <button class="draw-btn">Draw</button>
+                            <button class="away-btn">Away</button>
+                        </div>
+                    </div>
+                    <div class="return-display">Expected Return: $0</div>
+                    <div class="membership-return">Double-Club Membership Return: $0</div>
+                    <button class="buy-button" style="display: none;">Place Bet</button>
+                `;
+
+                matchesList.appendChild(matchDiv);
+                attachListeners(matchDiv, match);
+            });
+        }
+
+        function adjustDropdownWidth() {
+            const matchContainer = document.querySelector('.match-container'); // Reference match container
+            const dropdowns = document.querySelectorAll('.sport-dropdown'); // Reference all dropdowns
+
+            if (matchContainer) {
+                const containerWidth = matchContainer.offsetWidth;
+
+                dropdowns.forEach(dropdown => {
+                    dropdown.style.width = `${containerWidth}px`; // Set dropdown width to match container
+                });
+            }
+        }
+
+// Adjust width on page load
+window.addEventListener('load', adjustDropdownWidth);
+
+// Adjust width on window resize
+window.addEventListener('resize', adjustDropdownWidth);
+
+        function attachListeners(matchDiv, match) {
+            const betInput = matchDiv.querySelector('.bet-amount');
+            const returnDisplay = matchDiv.querySelector('.return-display');
+            const membershipReturnDisplay = matchDiv.querySelector('.membership-return');
+            const buyButton = matchDiv.querySelector('.buy-button');
+
+            let selectedOption = null;
+            let selectedOdds = null;
+
+            betInput.addEventListener('input', updateReturnDisplay);
+
+            // Bet Option Dropdown
+            const betOptionDropdown = document.getElementById('universal-bet-option');
+            betOptionDropdown.addEventListener('change', (event) => {
+                const selectedBetOption = event.target.value;
+                handleBetOptionChange(selectedBetOption, matchDiv, match);
+            });
+
             matchDiv.querySelectorAll('.home-btn, .draw-btn, .away-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
@@ -622,72 +459,35 @@
                     updateReturnDisplay();
                 });
             });
-        }
 
-        // Function to attach event listeners for BTS Yes/No buttons
-        function attachBTSListeners(matchDiv) {
-            matchDiv.querySelectorAll('.bts-yes-btn, .bts-no-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
+            buyButton.addEventListener('click', () => {
+                if (!selectedOption || !selectedOdds) {
+                    alert('Please select an option before buying.');
+                    return;
+                }
 
-                    if (button.classList.contains('bts-yes-btn')) {
-                        selectedOption = 'yes';
-                        selectedOdds = match.odds.bts_yes;
-                    } else if (button.classList.contains('bts-no-btn')) {
-                        selectedOption = 'no';
-                        selectedOdds = match.odds.bts_no;
-                    }
+                const betAmountUSD = parseFloat(betInput.value) || 0;
+                if (betAmountUSD <= 0) {
+                    alert('Please enter a valid bet amount.');
+                    return;
+                }
 
-                    updateReturnDisplay();
-                });
+                const matchDate = match.formatted_date;
+                const homeTeam = match.home_team;
+                const awayTeam = match.away_team;
+
+                const exchangeRate = 0.80;
+                const betAmountGBP = (betAmountUSD * exchangeRate).toFixed(2);
+
+                const confirmMessage = `Bet placed on ${selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)} at odds ${selectedOdds} with $${betAmountUSD} (approx. £${betAmountGBP} GBP).\n\nMatch: ${homeTeam} vs ${awayTeam}\nDate: ${matchDate}\n\nClick OK to proceed to payment.`;
+
+                if (confirm(confirmMessage)) {
+                    const paypalLink = `https://www.paypal.com/paypalme/DoubleClubChannel/${betAmountUSD.toFixed(2)}?currency_code=USD`;
+                    window.open(paypalLink, '_blank');
+                } else {
+                    alert("Payment canceled.");
+                }
             });
-        }
-
-
-        // Function to attach event listeners for DNB 1/2 buttons
-        function attachDNBListeners(matchDiv) {
-            matchDiv.querySelectorAll('.dnb-1-btn, .dnb-2-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-
-                    if (button.classList.contains('dnb-1-btn')) {
-                        selectedOption = '1';
-                        selectedOdds = match.odds.dnb_1;
-                    } else if (button.classList.contains('dnb-2-btn')) {
-                        selectedOption = '2';
-                        selectedOdds = match.odds.dnb_2;
-                    }
-
-                    updateReturnDisplay();
-                });
-            });
-        }
-
-        // Function to attach event listeners for DC 1/12/X2 buttons
-        function attachDCListeners(matchDiv) {
-            matchDiv.querySelectorAll('.dc-1x-btn, .dc-12-btn, .dc-x2-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-
-                    if (button.classList.contains('dc-1x-btn')) {
-                        selectedOption = '1x';
-                        selectedOdds = match.odds.dc_1x;
-                    } else if (button.classList.contains('dc-12-btn')) {
-                        selectedOption = '12';
-                        selectedOdds = match.odds.dc_12;
-
-                    } else if (button.classList.contains('dc-x2-btn')) {
-                        selectedOption = 'x2';
-                        selectedOdds = match.odds.dc_x2;
-                    }
-
-                    updateReturnDisplay();
-                });
-            });
-        }
 
             function updateReturnDisplay() {
                 const betAmount = parseFloat(betInput.value) || 0;
@@ -708,11 +508,56 @@
             }
         }
 
-    window.onload = () => {
+        function handleBetOptionChange(selectedBetOption, matchDiv, match) {
+            if (selectedBetOption === 'BTS') {
+                matchDiv.querySelector('.button-group').innerHTML = `
+                    <button class="bts-yes-btn">Yes</button>
+                    <button class="bts-no-btn">No</button>
+                `;
+                matchDiv.querySelector('.odds-display').innerHTML = `BTS Yes: ${match.odds.bts_yes}, BTS No: ${match.odds.bts_no}`;
+            } else if (selectedBetOption === 'DNB') {
+                matchDiv.querySelector('.button-group').innerHTML = `
+                    <button class="dnb-1-btn">1</button>
+                    <button class="dnb-2-btn">2</button>
+                `;
+                matchDiv.querySelector('.odds-display').innerHTML = `DNB 1: ${match.odds.dnb_1}, DNB 2: ${match.odds.dnb_2}`;
+            } else if (selectedBetOption === 'DC') {
+                matchDiv.querySelector('.button-group').innerHTML = `
+                    <button class="dc-1x-btn">1x</button>
+                    <button class="dc-12-btn">12</button>
+                    <button class="dc-x2-btn">x2</button>
+                `;
+                matchDiv.querySelector('.odds-display').innerHTML = `DC 1X: ${match.odds.dc_1x}, DC 12: ${match.odds.dc_12}, DC x2: ${match.odds.dc_x2}`;
+            } else if (selectedBetOption === 'OU') {
+                matchDiv.querySelector('.button-group').innerHTML = `
+                    <button class="ou-over-btn">Over</button>
+                    <button class="ou-under-btn">Under</button>
+                `;
+                matchDiv.querySelector('.odds-display').innerHTML = `OU Over: ${match.odds.ou_over}, OU Under: ${match.odds.ou_under}`;
+            } else {
+                matchDiv.querySelector('.button-group').innerHTML = `
+                    <button class="home-btn">Home</button>
+                    <button class="draw-btn">Draw</button>
+                    <button class="away-btn">Away</button>
+                `;
+                matchDiv.querySelector('.odds-display').innerHTML = `Home: ${match.odds.home_odds}, Draw: ${match.odds.draw_odds}, Away: ${match.odds.away_odds}`;
+            }
+        }
+
+        // Fetch data on page load
+        document.getElementById('sport-filter').addEventListener('change', fetchMatches);
+        document.getElementById('universal-bet-option').addEventListener('change', (event) => {
+            event.preventDefault(); // Prevent the page refresh
+            const selectedBetOption = event.target.value;
+            document.querySelectorAll('.match-container').forEach(matchDiv => {
+                const matchId = matchDiv.getAttribute('data-id');
+                const match = matches.find(m => m.id === matchId);
+                handleBetOptionChange(selectedBetOption, matchDiv, match);
+            });
+        });
+
         fetchSports();
-        fetchMatches(); // Initially load all matches
-        document.getElementById('sport-filter').addEventListener('change', fetchMatches); // Update matches on filter change
-    };
-</script>
+        fetchMatches();
+    </script>
 </body>
 </html>
