@@ -319,6 +319,20 @@
 
             const matches = await response.json();
             if (matches.length > 0) {
+                // Sort matches by date and time
+                matches.sort((a, b) => {
+                    const [dateA, timeA] = a.formatted_date.split(' - ');
+                    const [dateB, timeB] = b.formatted_date.split(' - ');
+
+                    const [dayA, monthA, yearA] = dateA.split('/');
+                    const [dayB, monthB, yearB] = dateB.split('/');
+
+                    // Format date into 'YYYY-MM-DD' for proper comparison
+                    const dateTimeA = new Date(`${yearA}-${monthA}-${dayA}T${timeA}`);
+                    const dateTimeB = new Date(`${yearB}-${monthB}-${dayB}T${timeB}`);
+
+                    return dateTimeA - dateTimeB; // Ascending order (earliest first)
+                });
                 renderMatches(matches);
             } else {
                 document.getElementById('matches-list').innerHTML = '<p>No matches available</p>';
@@ -328,6 +342,7 @@
             document.getElementById('matches-list').innerHTML = '<p>Failed to load matches. Please try again later.</p>';
         }
     }
+
 
     function renderMatches(matches) {
     const matchesList = document.getElementById('matches-list');
