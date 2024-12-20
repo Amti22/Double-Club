@@ -92,7 +92,62 @@ def read_matches(sport=None, date=None):
             'un_1d5': row[47],  # Double Chance Home/Draw at index 9 ('DC 1X')
             'un_2d5': row[49],  # Double Chance Home/Away at index 10 ('DC 12')
             'un_3d5': row[51],  # Double Chance Draw/Away at index 11 ('DC X2')
-            'un_3d5': row[51],  # Double Chance Draw/Away at index 11 ('DC X2')
+
+            'ah1_m3d75': row[18],
+            'ah2_m3d75': row[19],# Double Chance Draw/Away at index 11 (AH')
+            'ah1_m3d5': row[18],
+            'ah2_m3d5': row[19],  # Double Chance Draw/Away at index 11 (AH')
+
+            'ah1_m2d75': row[18],
+            'ah2_m2d75': row[19],
+            'ah1_m2d5': row[18],
+            'ah2_m2d5': row[19],
+            'ah1_m2d25': row[18],
+            'ah2_m2d25': row[19],
+            'ah1_m2': row[18],
+            'ah2_m2': row[19],
+
+            'ah1_m1d75': row[18],
+            'ah2_m1d75': row[19],
+            'ah1_m1d5': row[18],
+            'ah2_m1d5': row[19],
+            'ah1_m1d25': row[18],
+            'ah2_m1d25': row[19],
+            'ah1_m1': row[18],
+            'ah2_m1': row[19],
+
+            'ah1_m0d75': row[18],
+            'ah2_m0d75': row[19],
+            'ah1_m0d5': row[18],
+            'ah2_m0d5': row[19],
+            'ah1_m0d25': row[18],
+            'ah2_m0d25': row[19],
+            'ah1_m0': row[18],
+            'ah2_m0': row[19],
+
+            'ah1_p1d75': row[18],
+            'ah2_p1d75': row[19],
+            'ah1_p1d5': row[18],
+            'ah2_p1d5': row[19],
+            'ah1_p1d25': row[18],
+            'ah2_p1d25': row[19],
+            'ah1_p1': row[18],
+            'ah2_p1': row[19],
+
+            'ah1_p2d75': row[18],
+            'ah2_p2d75': row[19],
+            'ah1_p2d5': row[18],
+            'ah2_p2d5': row[19],
+            'ah1_p2d25': row[18],
+            'ah2_p2d25': row[19],
+            'ah1_p2': row[18],
+            'ah2_p2': row[19],
+
+            'ah1_p3d75': row[18],
+            'ah2_p3d75': row[19],  # Double Chance Draw/Away at index 11 (AH')
+            'ah1_p3d5': row[18],
+            'ah2_p3d5': row[19],  # Double Chance Draw/Away at index 11 (AH')
+
         }
 
     return matches
