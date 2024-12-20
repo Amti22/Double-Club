@@ -123,9 +123,8 @@
 
         .match-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 15px;
             font-weight: 600;
         }
 
@@ -134,7 +133,6 @@
             text-align: center;
             justify-content: center;
             align-items: center;
-            margin-bottom: 15px;
             font-weight: 600;  /* This makes the text bold */
         }
 
@@ -358,14 +356,14 @@ function renderMatches(matches) {
         // Only display match if at least one odd is available
         if (homeOdds || drawOdds || awayOdds) {
             matchDiv.innerHTML = `
-                <div class="match-header-time">
+                <div class="match-header">
                     <span>${match.home_team}</span>
                 </div>
-                    <div class="match-header-time">
+                    <div class="match-header">
                     <span>VS</span>
                 </div>
                 </div>
-                    <div class="match-header-time">
+                    <div class="match-header">
                     <span>${match.away_team}</span>
                 </div>
 
