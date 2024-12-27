@@ -3,6 +3,14 @@ from datetime import datetime, timedelta
 from pytz import UTC, FixedOffset
 from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
+import base64
+import json
+import tempfile
+from flask import Flask, render_template, jsonify, request
+from datetime import datetime
+from pytz import FixedOffset, UTC
+from googleapiclient.discovery import build
+from google.oauth2.service_account import Credentials
 
 # Flask app setup
 app = Flask(__name__)
@@ -13,6 +21,7 @@ SPREADSHEET_ID = '1ZV-oZTpSee2xF0BET84SsAtpTQPLsm0fhZDKfd18E00'
 RANGE_NAME = 'Sheet1!A:CF'  # Adjust based on your sheet's data range
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 SERVICE_ACCOUNT_FILE = 'credentials.json'
+ENCODED_CREDENTIALS_FILE = 'Credentials-encoded.json'
 
 # Load credentials and create a Sheets API client
 credentials = Credentials.from_service_account_file(
@@ -24,8 +33,38 @@ sheets_service = build('sheets', 'v4', credentials=credentials)
 from datetime import datetime
 from pytz import FixedOffset, UTC
 
+# Function to decode the credentials and use them
+def decode_credentials():
+    try:
+        # Read the encoded credentials from the JSON file
+        with open(ENCODED_CREDENTIALS_FILE, 'r') as f:
+            encoded_data = json.load(f)
+
+        # Decode the base64 encoded credentials
+        encoded_credentials = encoded_data.get('encoded_credentials')
+        if not encoded_credentials:
+            raise ValueError("No encoded credentials found in the file")
+
+        decoded_credentials = base64.b64decode(encoded_credentials)
+
+        # Create a temporary file to store the decoded credentials
+        with tempfile.NamedTemporaryFile(delete=False, mode='wb') as temp_file:
+            temp_file.write(decoded_credentials)
+            temp_file_path = temp_file.name
+
+        return temp_file_path
+
+    except Exception as e:
+        print(f"Error decoding credentials: {e}")
+        return None
+
 def fetch_matches_from_sheets():
     try:
+        sheets_service = create_sheets_service()
+        if not sheets_service:
+            print("Failed to create Sheets API service.")
+            return []
+
         # Fetch the data from the Google Sheet
         sheet = sheets_service.spreadsheets()
         result = sheet.values().get(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME).execute()
@@ -94,7 +133,14 @@ def fetch_matches_from_sheets():
         print(f"Error fetching data from Google Sheets: {e}")
         return []
 
-
+# Load credentials and create a Sheets API client
+def create_sheets_service():
+    credentials_path = decode_credentials()
+    if credentials_path:
+        credentials = Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
+        sheets_service = build('sheets', 'v4', credentials=credentials)
+        return sheets_service
+    return None
 
 
 @app.route('/')
