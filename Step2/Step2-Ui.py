@@ -21,7 +21,7 @@ SPREADSHEET_ID = '1ZV-oZTpSee2xF0BET84SsAtpTQPLsm0fhZDKfd18E00'
 RANGE_NAME = 'Sheet1!A:CF'  # Adjust based on your sheet's data range
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 SERVICE_ACCOUNT_FILE = 'credentials.json'
-ENCODED_CREDENTIALS_FILE = 'Credentials-encoded.json'
+ENCODED_CREDENTIALS_FILE = 'Credentials-Encoded.json'
 
 # Load credentials and create a Sheets API client
 credentials = Credentials.from_service_account_file(
