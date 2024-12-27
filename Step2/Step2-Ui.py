@@ -207,8 +207,10 @@ def create_sheets_service():
 
 
 @app.route('/')
-def home():
+def index():
+    # Render the main page where the matches will be displayed
     return render_template('index.html')
+
 
 
 
