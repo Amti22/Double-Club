@@ -207,8 +207,17 @@ def create_sheets_service():
 
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def home():
+    return render_template('index-MainMenu.html')
+
+@app.route('/football')
+def football():
+    return render_template('index-Football.html')
+
+@app.route('/basketball')
+def basketball():
+    return render_template('index-Basketball.html')
+
 
 
 @app.route('/matches')
@@ -243,6 +252,33 @@ def get_dates():
 
     dates = {match['formatted_date'].split(' - ')[0] for match in matches}
     return jsonify(sorted(dates))
+
+
+# Endpoint to save the bet details
+@app.route('/save_bet', methods=['POST'])
+def save_bet():
+    try:
+        # Get the bet details from the request
+        bet_details = request.get_json()
+
+        # Parse the timestamp into a datetime object for better formatting
+        timestamp = datetime.fromisoformat(bet_details['currentDateTime'])
+
+        # Prepare the bet details to be saved
+        bet_message = (
+            f"Bet placed on {bet_details['selectedOption'].capitalize()} at odds {bet_details['selectedOdds']} with ${bet_details['betAmountUSD']} "
+            f"(approx. £{bet_details['betAmountGBP']} GBP).\n\nMatch: {bet_details['homeTeam']} vs {bet_details['awayTeam']}\n"
+            f"Date: {bet_details['matchDate']}\nBet placed at: {timestamp.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+        )
+
+        # Write the bet details to orders.txt in append mode to avoid overwriting
+        with open('orders.txt', 'a') as file:
+            file.write(bet_message + "\n" + "-" * 40 + "\n")
+
+        return 'Bet details saved successfully', 200
+
+    except Exception as e:
+        return f"Error saving bet details: {e}", 500
 
 
 if __name__ == '__main__':
