@@ -208,15 +208,7 @@ def create_sheets_service():
 
 @app.route('/')
 def home():
-    return render_template('index-MainMenu.html')
-
-@app.route('/football')
-def football():
-    return render_template('index-Football.html')
-
-@app.route('/basketball')
-def basketball():
-    return render_template('index-Basketball.html')
+    return render_template('index.html')
 
 
 
