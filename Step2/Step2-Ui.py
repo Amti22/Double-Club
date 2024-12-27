@@ -11,6 +11,8 @@ from datetime import datetime
 from pytz import FixedOffset, UTC
 from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
+import requests
+
 
 # Flask app setup
 app = Flask(__name__)
@@ -23,6 +25,9 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 SERVICE_ACCOUNT_FILE = 'credentials.json'
 ENCODED_CREDENTIALS_FILE = 'Credentials-Encoded.json'
 
+# Discord Webhook Configuration
+DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1322269431761604760/JqbwTRPdxX0EZ_oqrhJJhrfZRBkVwlt7-0pvH4bHeQHTl9rJovSc3kRvnIAp-ae6dgx_'
+
 # Load credentials and create a Sheets API client
 credentials = Credentials.from_service_account_file(
     SERVICE_ACCOUNT_FILE, scopes=SCOPES
@@ -32,6 +37,42 @@ sheets_service = build('sheets', 'v4', credentials=credentials)
 
 from datetime import datetime
 from pytz import FixedOffset, UTC
+
+# Function to send a message to Discord
+def send_bet_to_discord(bet_details):
+    try:
+        bet_message = (
+            f"**Bet placed on {bet_details['selectedOption'].capitalize()}**\n"
+            f"Odds: {bet_details['selectedOdds']}\n"
+            f"Amount: ${bet_details['betAmountUSD']} (approx. £{bet_details['betAmountGBP']} GBP)\n\n"
+            f"**Match**: {bet_details['homeTeam']} vs {bet_details['awayTeam']}\n"
+            f"**Date**: {bet_details['matchDate']}\n"
+            f"**Bet placed at**: {bet_details['currentDateTime']}\n"
+        )
+
+        # Sending the message to Discord via webhook
+        response = requests.post(DISCORD_WEBHOOK_URL, json={"content": bet_message})
+        if response.status_code == 204:
+            print("Message successfully sent to Discord.")
+        else:
+            print(f"Failed to send message. Status code: {response.status_code}")
+    except Exception as e:
+        print(f"Error sending bet details to Discord: {e}")
+
+# Endpoint to save the bet details
+@app.route('/save_bet', methods=['POST'])
+def save_bet():
+    try:
+        # Get the bet details from the request
+        bet_details = request.get_json()
+
+        # Prepare the bet details to be sent to Discord
+        send_bet_to_discord(bet_details)
+
+        return 'Bet details sent to Discord successfully', 200
+    except Exception as e:
+        return f"Error saving bet details: {e}", 500
+
 
 # Function to decode the credentials and use them
 def decode_credentials():
@@ -207,10 +248,16 @@ def create_sheets_service():
 
 
 @app.route('/')
-def index():
-    # Render the main page where the matches will be displayed
+def home():
     return render_template('index.html')
 
+@app.route('/football')
+def football():
+    return render_template('index-Football.html')
+
+@app.route('/basketball')
+def basketball():
+    return render_template('index-Basketball.html')
 
 
 
@@ -246,33 +293,6 @@ def get_dates():
 
     dates = {match['formatted_date'].split(' - ')[0] for match in matches}
     return jsonify(sorted(dates))
-
-
-# Endpoint to save the bet details
-@app.route('/save_bet', methods=['POST'])
-def save_bet():
-    try:
-        # Get the bet details from the request
-        bet_details = request.get_json()
-
-        # Parse the timestamp into a datetime object for better formatting
-        timestamp = datetime.fromisoformat(bet_details['currentDateTime'])
-
-        # Prepare the bet details to be saved
-        bet_message = (
-            f"Bet placed on {bet_details['selectedOption'].capitalize()} at odds {bet_details['selectedOdds']} with ${bet_details['betAmountUSD']} "
-            f"(approx. £{bet_details['betAmountGBP']} GBP).\n\nMatch: {bet_details['homeTeam']} vs {bet_details['awayTeam']}\n"
-            f"Date: {bet_details['matchDate']}\nBet placed at: {timestamp.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-        )
-
-        # Write the bet details to orders.txt in append mode to avoid overwriting
-        with open('orders.txt', 'a') as file:
-            file.write(bet_message + "\n" + "-" * 40 + "\n")
-
-        return 'Bet details saved successfully', 200
-
-    except Exception as e:
-        return f"Error saving bet details: {e}", 500
 
 
 if __name__ == '__main__':
