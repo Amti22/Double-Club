@@ -10,15 +10,18 @@
 #cart-container {
     display: none; /* Initially hidden */
     position: fixed;
-    bottom: 70px; /* Space between cart icon and container */
-    right: 10px;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Offset by half of its own width and height to center */
     background-color: #2F3340;
     border: 1px solid #3E4352;
     border-radius: 10px;
     padding: 20px;
-    margin-bottom: 20px;
+    max-width: 800px; /* Same width as other containers */
+    width: 100%; /* Ensure it takes up available width */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    z-index: 9999; /* Ensure it's on top of other elements */
 }
 
 #cart-icon {
@@ -29,22 +32,23 @@
     border-radius: 50%;
     width: 50px;
     height: 50px;
-    display: flex;  /* Use flexbox to center content */
-    justify-content: center;  /* Center horizontally */
-    align-items: center;  /* Center vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: visibility 0s, transform 0.3s ease; /* Smooth transition for visibility and transformation */
+    transition: visibility 0s, transform 0.3s ease;
 }
 
 #cart-icon.hidden {
-    visibility: hidden; /* Make the cart icon invisible but keep its position */
+    visibility: hidden;
 }
 
 #cart-icon.visible {
-    visibility: visible; /* Make the cart icon visible */
+    visibility: visible;
 }
 
+/* For Minimize Button */
 #minimize-btn {
     background-color: #D9534F;
     color: white;
@@ -56,11 +60,13 @@
     margin-top: 10px;
 }
 
+/* For Cart Item List */
 #cart-container ul {
     list-style-type: none;
     padding-left: 0;
 }
 
+/* Cart Button */
 #cart-container button {
     background-color: #3E4352;
     color: #FFFFFF96;
@@ -72,6 +78,7 @@
     font-size: 0.9rem;
     margin-top: 10px;
 }
+
 
 #cart-icon svg {
     fill: white;  /* You can use an SVG icon for the cart if desired */
