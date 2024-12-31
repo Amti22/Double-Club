@@ -77,7 +77,7 @@
         background-color: #C33D3D; /* Darker shade on hover */
     }
 
-    /* Cart Icon */
+ /* Cart Icon */
     #cart-icon {
         position: fixed;
         bottom: 10px;
@@ -92,6 +92,7 @@
         cursor: pointer;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: visibility 0s, transform 0.3s ease;
+        z-index: 9999; /* Ensure it stays on top of all elements */
     }
 
     #cart-icon.hidden {
@@ -101,6 +102,7 @@
     #cart-icon.visible {
         visibility: visible;
     }
+
 
     /* Cart Button */
     #cart-container button.checkout-btn {
@@ -121,6 +123,10 @@
     #cart-icon svg {
         fill: white;
         transition: fill 0.3s ease; /* Smooth color transition for the icon */
+    }
+
+    #cart-icon:hover svg {
+        fill: #D9534F; /* Change color on hover */
     }
 
     #cart-icon:hover svg {
