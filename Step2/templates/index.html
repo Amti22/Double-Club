@@ -6,52 +6,54 @@
     <title>Football Betting Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+#cart-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    position: fixed;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Offset by half of its own width and height to center */
+    width: 120vw; /* Increase width to 120% of the viewport width */
+    height: 100vh; /* Take up the entire height of the viewport */
+    background-color: #2F3340;
+    border: 1px solid #3E4352;
+    border-radius: 10px;
+    padding: 40px 30px; /* Increase padding for top and bottom, and left-right */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for contrast */
+    z-index: 9998; /* Keep it on top of all other elements */
+    overflow-y: auto;
+}
 
-    /* Cart Container */
-    #cart-container {
-        display: flex; /* Use flexbox */
-        flex-direction: column; /* Stack the content vertically */
-        justify-content: flex-start; /* Align content at the top */
-        position: fixed;
-        top: 50%; /* Center vertically */
-        left: 50%; /* Center horizontally */
-        transform: translate(-50%, -50%); /* Offset by half of its own width and height to center */
-        background-color: #2F3340;
-        border: 1px solid #3E4352;
-        border-radius: 10px;
-        padding: 20px;
-        max-width: 800px; /* Same width as other containers */
-        width: 100%; /* Ensure it takes up available width */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        z-index: 9998; /* Ensure it's below the cart icon */
-        height: auto; /* Allow the height to adjust based on the content */
-        overflow-y: auto; /* Enable scrolling if content overflows */
-    }
 
-    /* Cart Content */
-    #cart-container .content {
-        flex-grow: 1; /* Allow this part of the container to take up the available space */
-        overflow-y: auto; /* Scrollable content area */
-        box-shadow: inset 0 -8px 10px rgba(0, 0, 0, 0.1); /* Shadow to indicate more content */
-    }
+/* Cart Content */
+#cart-container .content {
+    flex-grow: 1;
+    overflow-y: auto;
+    box-shadow: inset 0 -8px 10px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ensure content takes full width */
+    max-width: 800px; /* Limit content width for better readability */
+    height: 100%; /* Ensure content area fills the full height */
+}
 
-    /* Buttons (Checkout and Minimize) */
-    #cart-container button {
-        width: 100%; /* Make buttons responsive */
-        max-width: 300px; /* Limit width to avoid oversized buttons on wide screens */
-        background-color: #3E4352;
-        color: #FFFFFF96;
-        border: 2px solid #3E4352;
-        border-radius: 6px;
-        padding: 12px 15px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 0.9rem;
-        margin-top: 10px;
-        margin-bottom: 20px; /* Ensure some spacing between the button and bottom edge */
-        transition: background-color 0.3s ease; /* Hover effect */
-    }
+/* Buttons (Checkout and Minimize) */
+#cart-container button {
+    width: 100%;
+    max-width: none;
+    background-color: #3E4352;
+    color: #FFFFFF96;
+    border: 2px solid #3E4352;
+    border-radius: 6px;
+    padding: 12px 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+}
+
 
     #cart-container button:hover {
         background-color: #4F5660;
