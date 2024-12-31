@@ -6,6 +6,67 @@
     <title>Football Betting Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+
+#cart-container {
+    display: none; /* Initially hidden */
+    position: fixed;
+    bottom: 70px; /* Space between cart icon and container */
+    right: 10px;
+    background-color: #2F3340;
+    border: 1px solid #3E4352;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+#cart-icon {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: #2F3340;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#minimize-btn {
+    background-color: #D9534F;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    margin-top: 10px;
+}
+
+#cart-container.show {
+    display: block;
+    transform: scale(1.2); /* Zoom-in effect */
+}
+
+#cart-container.hide {
+    display: none; /* Hidden cart container */
+}
+
+#cart-icon.show {
+    display: flex; /* Show the cart icon when minimized */
+}
+
+#cart-icon.hide {
+    display: none; /* Hide the cart icon when the cart is expanded */
+}
+
+
+
+
         .sport-dropdown {
             padding: 10px;
             font-size: 1rem;
@@ -278,11 +339,18 @@
     <option value="">Select Sport</option>
 </select>
 
-<div id="cart-container" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border: 1px solid #3E4352; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: none;">
+<!-- Cart Icon (Dot) -->
+<div id="cart-icon" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <span style="color: #fff; font-size: 24px;">🛒</span>
+</div>
+
+<!-- Cart Container (Initially Hidden) -->
+<div id="cart-container" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border: 1px solid #3E4352; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: none; width: 300px;">
     <h3 style="color: #FFFFFF96; font-weight: 700;">Your Cart</h3>
     <ul id="cart-list" style="list-style-type: none; padding-left: 0; color: #FFFFFF96;"></ul>
     <div id="total-amount" style="color: #FFFFFF96; margin-top: 10px;">Total: $0.00 (approx. £0.00 GBP)</div>
     <button id="checkout-btn" style="background-color: #3E4352; color: #FFFFFF96; border: 2px solid #3E4352; border-radius: 6px; padding: 12px 15px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 10px;">Checkout</button>
+    <button id="minimize-btn" style="background-color: #D9534F; color: white; border: none; border-radius: 6px; cursor: pointer; padding: 4px 8px; font-size: 0.8rem; margin-top: 10px;">Minimize</button>
 </div>
 
 
@@ -293,10 +361,9 @@
 </div>
 
 <script>
-
 let cartItems = []; // Array to store the individual bets in the cart
 
-// Update the cart with a new bet
+// Function to update the cart with a new bet
 function updateCart(betDetails) {
     const cartContainer = document.getElementById('cart-container');
     const cartList = document.getElementById('cart-list');
@@ -349,6 +416,48 @@ function removeBet(listItem, betDetails) {
     updateTotalAmount();
 }
 
+// Function to update the total amount after every change
+function updateTotalAmount() {
+    const totalAmountUSD = cartItems.reduce((total, bet) => total + bet.betAmountUSD, 0);
+    const totalAmountGBP = (totalAmountUSD * 0.80).toFixed(2); // Convert to GBP if necessary
+
+    // Update the total amount display dynamically
+    document.getElementById('total-amount').textContent = `Total: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`;
+}
+
+// Handle cart icon click to toggle the cart container visibility
+document.getElementById('cart-icon').addEventListener('click', () => {
+    const cartContainer = document.getElementById('cart-container');
+    const cartIcon = document.getElementById('cart-icon');
+
+    // Toggle the visibility of the cart container
+    if (cartContainer.style.display === 'none' || !cartContainer.style.display) {
+        // Show the cart container
+        cartContainer.style.display = 'block';
+
+        // Hide the cart icon
+        cartIcon.style.display = 'none';
+    } else {
+        // Hide the cart container
+        cartContainer.style.display = 'none';
+
+        // Show the cart icon
+        cartIcon.style.display = 'block';
+    }
+});
+
+// Handle minimize button click to hide the cart and show the icon again
+document.getElementById('minimize-btn').addEventListener('click', () => {
+    const cartContainer = document.getElementById('cart-container');
+    const cartIcon = document.getElementById('cart-icon');
+
+    // Hide the expanded cart container
+    cartContainer.style.display = 'none';
+
+    // Show the cart icon again
+    cartIcon.style.display = 'block';
+});
+
 // Handle the checkout button click
 document.getElementById('checkout-btn').addEventListener('click', () => {
     if (cartItems.length === 0) {
@@ -371,14 +480,6 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     }
 });
 
-// Function to update the total amount after every change
-function updateTotalAmount() {
-    const totalAmountUSD = cartItems.reduce((total, bet) => total + bet.betAmountUSD, 0);
-    const totalAmountGBP = (totalAmountUSD * 0.80).toFixed(2); // Convert to GBP if necessary
-
-    // Update the total amount display dynamically
-    document.getElementById('total-amount').textContent = `Total: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`;
-}
 
     async function fetchSports() {
         try {
