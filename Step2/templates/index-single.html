@@ -6,7 +6,8 @@
     <title>Football Betting Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-/* Accumulator Button (Styled like other buttons) */
+
+        /* Accumulator Button (Styled like other buttons) */
 #accumulator-btn {
     width: 100%;
     background-color: #3E4352;
@@ -24,6 +25,8 @@
 #accumulator-btn:hover {
     background-color: #4F5660; /* Hover effect */
 }
+
+
 
 #cart-container {
     display: flex;
@@ -72,7 +75,6 @@
     margin-bottom: 20px;
     transition: background-color 0.3s ease;
 }
-
 
     #cart-container button:hover {
         background-color: #4F5660;
@@ -421,7 +423,7 @@
     <option value="">Select Sport</option>
 </select>
 
-<button id="accumulator-btn" class="accumulator-btn">Try Single Bet</button>
+<button id="accumulator-btn" class="accumulator-btn">Try Acumulator</button>
 
 <div id="cart-icon" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
     <span style="color: #fff; font-size: 24px;">🛒</span>
@@ -432,22 +434,14 @@
 </div>
 
 
-
 <!-- Cart Container (Initially Hidden) -->
 <div id="cart-container" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border: 1px solid #3E4352; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: none; width: 300px;">
     <h3 style="color: #FFFFFF96; font-weight: 700;">Your Cart</h3>
     <ul id="cart-list" style="list-style-type: none; padding-left: 0; color: #FFFFFF96;"></ul>
-    <div style="margin-top: 10px;">
-        <label for="bet-amount" style="color: #FFFFFF96; font-size: 0.9rem;">Bet Amount:</label>
-        <input id="bet-amount" type="number" min="0" step="0.01" value="1" style="margin-left: 10px; width: 80px; border-radius: 4px; border: 1px solid #3E4352; padding: 4px;">
-    </div>
-    <div id="total-odds" style="color: #FFFFFF96; margin-top: 10px;">Total Odds: 1.00</div>
-    <div id="potential-return" style="color: #FFFFFF96; margin-top: 10px;">Potential Return: $0.00</div>
-    <div id="membership-return" class="membership-return" style="text-align: right; font-weight: 600; color: var(--Overline); margin-top: 15px; display: block;">Membership Return: $0.00</div>
+    <div id="total-amount" style="color: #FFFFFF96; margin-top: 10px;">Total: $0.00 (approx. £0.00 GBP)</div>
     <button id="checkout-btn" style="background-color: #3E4352; color: #FFFFFF96; border: 2px solid #3E4352; border-radius: 6px; padding: 12px 15px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 10px;">Checkout</button>
     <button id="minimize-btn" style="background-color: #D9534F; color: white; border: none; border-radius: 6px; cursor: pointer; padding: 4px 8px; font-size: 0.8rem; margin-top: 10px;">Minimize</button>
 </div>
-
 
 
 
@@ -459,43 +453,39 @@
 <script>
 
  document.getElementById('accumulator-btn').addEventListener('click', function() {
-    window.location.href = '/single'; // Redirect to the /single route
+    window.location.href = '/acumulator'; // Redirect to the /acumulator route
   });
 
-    let cartItems = []; // Array to store individual bets
+
+let cartItems = []; // Array to store the individual bets in the cart
+
 // Function to update the cart with a new bet
 function updateCart(betDetails) {
     const cartContainer = document.getElementById('cart-container');
     const cartList = document.getElementById('cart-list');
-    const cartBadge = document.getElementById('cart-badge'); // Get the notification badge element
+    const cartBadge = document.getElementById('cart-badge');  // Get the notification badge element
 
     // Create a new list item for the bet placed
     const listItem = document.createElement('li');
-    listItem.style.marginBottom = '10px';
+    listItem.textContent = `${betDetails.match} - ${betDetails.selectedOption} odds ${betDetails.selectedOdds} - $${betDetails.betAmountUSD}`;
 
-    // Add bet details text
-    const betText = document.createElement('span');
-    betText.textContent = `${betDetails.match} - ${betDetails.selectedOption} odds ${betDetails.selectedOdds}`;
-    listItem.appendChild(betText);
-
-    // Create the remove button for this bet
+    // Create a "Remove" button for the bet
     const removeButton = document.createElement('button');
     removeButton.textContent = 'Remove';
+    removeButton.style.marginLeft = '10px';
     removeButton.style.backgroundColor = '#D9534F';
     removeButton.style.color = 'white';
     removeButton.style.border = 'none';
     removeButton.style.borderRadius = '6px';
     removeButton.style.cursor = 'pointer';
     removeButton.style.padding = '4px 8px';
-    removeButton.style.fontSize = '0.8rem';
-    removeButton.style.marginLeft = '10px';
 
-    // Add event listener to remove the bet when the remove button is clicked
+    // Add event listener to remove the bet from the cart
     removeButton.addEventListener('click', () => {
         removeBet(listItem, betDetails);
     });
 
-    // Append the remove button to the list item
+    // Add the remove button to the list item
     listItem.appendChild(removeButton);
 
     // Add the new bet to the cart
@@ -504,71 +494,39 @@ function updateCart(betDetails) {
     // Add the bet to the cartItems array
     cartItems.push(betDetails);
 
-    // Recalculate total odds when a new bet is added
-    totalOdds = cartItems.reduce((acc, bet) => acc * bet.selectedOdds, 1); // Reset total odds based on all bets
+    // Update the total amount live
+    updateTotalAmount();
 
-    // Update the UI
-    updateCartUI();
-
-    // Update the cart badge to reflect the number of items in the cart
-    cartBadge.textContent = cartItems.length; // Set badge count to the number of items
-    cartBadge.style.display = 'inline-block'; // Show the badge
+    // Update the cart items count and show the notification badge
+    cartBadge.textContent = cartItems.length;
+    cartBadge.style.display = 'flex';  // Make the notification badge visible
 }
 
 // Function to remove a bet from the cart
 function removeBet(listItem, betDetails) {
+    const cartBadge = document.getElementById('cart-badge');  // Get the notification badge element
+
     // Remove the bet from the cartItems array
     cartItems = cartItems.filter(item => item !== betDetails);
-
-    // Recalculate total odds after removing the bet
-    totalOdds = cartItems.reduce((acc, bet) => acc * bet.selectedOdds, 1); // Recalculate total odds
 
     // Remove the list item from the DOM
     listItem.remove();
 
-    // Update the UI
-    updateCartUI();
+    // Update the total amount live after removal
+    updateTotalAmount();
 
-    // Update the cart badge to reflect the number of items left
-    const cartBadge = document.getElementById('cart-badge');
-    cartBadge.textContent = cartItems.length; // Update badge count
+    // Update the cart items count
+    cartBadge.textContent = cartItems.length;
+
+    // If no items are left in the cart, hide the notification badge
     if (cartItems.length === 0) {
-        cartBadge.style.display = 'none'; // Hide the badge if no items are left
+        cartBadge.style.display = 'none';
     }
 }
-
-// Function to update the cart UI
-function updateCartUI() {
-    const totalOddsDisplay = document.getElementById('total-odds');
-    const potentialReturnDisplay = document.getElementById('potential-return');
-    const membershipReturnDisplay = document.getElementById('membership-return');
-    const wagerAmount = parseFloat(document.getElementById('bet-amount').value) || 0;
-
-    // If no items in cart, set total odds to 1
-    if (cartItems.length === 0) {
-        totalOdds = 0;  // Set total odds to 1 when there are no items in the cart
-    }
-
-    // Update the total odds display
-    totalOddsDisplay.textContent = `Total Odds: ${totalOdds.toFixed(2)}`;
-
-    // Calculate the potential return (if total odds is 0, return should also be 0)
-    const returnAmount = wagerAmount * totalOdds;
-    potentialReturnDisplay.textContent = `Potential Return: $${returnAmount.toFixed(2)}`;
-
-    // Calculate the membership return (double the potential return)
-    const membershipReturnAmount = returnAmount * 2;
-    membershipReturnDisplay.textContent = `Membership Return: $${membershipReturnAmount.toFixed(2)}`;
-}
-
-// Function to handle bet amount input change and update potential return
-document.getElementById('bet-amount').addEventListener('input', function() {
-    updateCartUI(); // Update UI when bet amount changes
-});
 
 // Function to update the total amount after every change
 function updateTotalAmount() {
-    const totalAmountUSD = cartItems.reduce((total, bet) => total + (bet.betAmountUSD || 0), 0);
+    const totalAmountUSD = cartItems.reduce((total, bet) => total + bet.betAmountUSD, 0);
     const totalAmountGBP = (totalAmountUSD * 0.80).toFixed(2); // Convert to GBP if necessary
 
     // Update the total amount display dynamically
@@ -605,25 +563,24 @@ document.getElementById('minimize-btn').addEventListener('click', () => {
     cartIcon.classList.add('visible');
 });
 
-// Handle the checkout button click (only one definition)
+// Handle the checkout button click
 document.getElementById('checkout-btn').addEventListener('click', () => {
     if (cartItems.length === 0) {
         console.log('Your cart is empty. Please add items before checking out.');
         return;
     }
 
-    // Calculate the total bet amount and potential return
-    const wagerAmount = parseFloat(document.getElementById('bet-amount').value) || 0;
-    const potentialReturn = wagerAmount * totalOdds;
-    const totalAmountGBP = (wagerAmount * 0.80).toFixed(2); // Convert to GBP if necessary
+    // Calculate the total bet amount
+    const totalAmountUSD = cartItems.reduce((total, bet) => total + bet.betAmountUSD, 0);
+    const totalAmountGBP = (totalAmountUSD * 0.80).toFixed(2); // Convert to GBP if necessary
 
     // Prepare the checkout details message
     const betDetailsMessage = cartItems.map(bet => {
-        return `${bet.match} - ${bet.selectedOption} odds ${bet.selectedOdds}`;
+        return `${bet.match} - ${bet.selectedOption} odds ${bet.selectedOdds} - $${bet.betAmountUSD}`;
     }).join('\n');
 
     const checkoutMessage = {
-        content: `**New Bet Checkout**\n\n${betDetailsMessage}\n\nWager Amount: $${wagerAmount.toFixed(2)}\nPotential Return: $${potentialReturn.toFixed(2)}\n(approx. £${totalAmountGBP} GBP)`,
+        content: `**New Bet Checkout**\n\n${betDetailsMessage}\n\nTotal: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`,
     };
 
     // Send the checkout details to the server via the /save_bet endpoint
@@ -646,7 +603,6 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     const paypalLink = `https://www.paypal.com/paypalme/DoubleClubChannel/${totalAmountGBP}?currency_code=GBP`;
     window.open(paypalLink, '_blank');
 });
-
 
 
 
@@ -740,7 +696,7 @@ function renderMatches(matches) {
                     ${homeOdds ? `${match.formatted_date}` : ''}
                 </div>
                 <div class="bet-container">
-                    <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1" value="1" style="display: none;">
+                    <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1">
                     <div class="button-group">
                         ${homeOdds ? `<button class="home-btn">Home: ${match.odds.home_odds}</button>` : ''}
                         ${drawOdds ? `<button class="draw-btn">Draw: ${match.odds.draw_odds}</button>` : ''}
@@ -754,9 +710,8 @@ function renderMatches(matches) {
                         <option value="DC">Double Chance</option>
                     </select>
                 </div>
-                <div class="return-display" style="display: none;">Expected Return: $0</div>
-                <div class="membership-return" style="display: none;">Double-Club Membership Return: $0</div>
-
+                <div class="return-display">Expected Return: $0</div>
+                <div class="membership-return">Double-Club Membership Return: $0</div>
                 <button class="buy-button" style="display: none;">Place Bet</button>
             `;
 
@@ -1073,12 +1028,11 @@ buyButton.addEventListener('click', () => {
                     returnDisplay.textContent = `Expected Return: $${expectedReturn}`;
                     membershipReturnDisplay.textContent = `Double-Club Membership Return: $${membershipReturn}`;
 
-
-                    membershipReturnDisplay.style.display = 'none';
+                    membershipReturnDisplay.style.display = 'block';
                     buyButton.style.display = 'inline-block';
                 } else {
                     returnDisplay.textContent = 'Expected Return: $0';
-                    membershipReturnDisplay.style.display = 'none';
+                    membershipReturnDisplay.style.display = 'block';
                     buyButton.style.display = 'none';
                 }
             }

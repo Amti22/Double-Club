@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Betting Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-black: #FFFFFF96;
+            --primary-white: #FFFFFF;
+            --secondary-gray: #FFFFFF96;
+            --accent-red: #E63946;
+            --accent-blue: #457B9D;
+            --background-gray: #F8F9FA;
+            --Content1: #FFFFFF96;
+            --Headling2: #FF7A7A;
+            --Overline: #9892E0;
+            --Button-label: #FFFFFF96;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: transparent;
+            color: #FFFFFF96;
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .navbar-links a {
+            text-decoration: none;
+            color: #FFFFFF96;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-left: 20px;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .navbar-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #FFFFFF96;
+            transition: width 0.3s;
+        }
+
+        .navbar-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Dropdown */
+        .sport-dropdown {
+            padding: 10px;
+            font-size: 1rem;
+            background-color: #3E4352;
+            color: #FFFFFF96;
+            border: none;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary-black);
+            color: #FFFFFF96;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            font-size: 0.8rem;
+            color: #CCCCCC;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                align-items: center;
+            }
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+    <div class="navbar-brand">Football Betting</div>
+    <div class="navbar-links">
+        <a href="/football">Football</a>
+        <a href="/basketball">Basketball</a>
+    </div>
+</nav>
+
+<!-- Dropdown for Selecting Sport -->
+<select id="sport-filter" class="sport-dropdown">
+    <option value="">Select Sport</option>
+</select>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>&copy; 2024 DoubleClub.com</p>
+</footer>
+
+<script>
+// Static list of sports
+const sports = [
+    'Football',
+    'Basketball',
+];
+
+// Populate the dropdown with sports
+function populateSports() {
+    const sportFilter = document.getElementById('sport-filter');
+
+    sports.forEach(sport => {
+        const option = document.createElement('option');
+        option.value = sport.toLowerCase();
+        option.textContent = sport;
+        sportFilter.appendChild(option);
+    });
+}
+
+// Listen for changes in the sport dropdown
+document.getElementById('sport-filter').addEventListener('change', function() {
+    const selectedSport = this.value;
+    if (selectedSport) {
+        window.location.href = `/${selectedSport}`;  // Redirect to the selected sport's route
+    }
+});
+
+// Call populateSports when the page loads
+window.onload = populateSports;
+</script>
+
+</body>
+</html>
