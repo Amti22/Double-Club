@@ -6,6 +6,31 @@
     <title>Football Betting Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+
+    #title {
+  font-size: 2.5rem; /* Popping size */
+  font-weight: bold; /* Bold */
+  line-height: 1.375; /* Line spacing */
+  letter-spacing: 0; /* Letter spacing */
+  width: 100%; /* Full width */
+  margin: auto; /* Center the title */
+  text-align: center; /* Center align */
+  background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%); /* Gradient with specific angle and stops */
+  -webkit-background-clip: text; /* Clip the background gradient to the text */
+  color: transparent; /* Text color will be the gradient */
+  appearance: normal; /* Normal appearance */
+}
+
+@media (max-width: 600px) {
+  #title {
+    font-size: 1.75rem; /* Smaller size for mobile */
+    line-height: normal; /* Auto line height for mobile */
+    letter-spacing: normal; /* Auto letter spacing */
+    margin: auto; /* Center on mobile */
+  }
+}
+
+
 /* Accumulator Button (Styled like other buttons) */
 #accumulator-btn {
     width: 100%;
@@ -416,6 +441,8 @@
 </head>
 
 <body>
+
+<h1 id="title">Upcoming Events</h1>
 
 <select id="sport-filter" class="sport-dropdown">
     <option value="">Select Sport</option>
