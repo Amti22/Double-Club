@@ -7,87 +7,125 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
 
-#cart-container {
-    display: none; /* Initially hidden */
-    position: fixed;
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Offset by half of its own width and height to center */
-    background-color: #2F3340;
-    border: 1px solid #3E4352;
-    border-radius: 10px;
-    padding: 20px;
-    max-width: 800px; /* Same width as other containers */
-    width: 100%; /* Ensure it takes up available width */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    z-index: 9999; /* Ensure it's on top of other elements */
-    height: auto; /* Allow the height to adjust based on the content */
-    max-height: 80vh; /* Set a maximum height (80% of viewport height) */
-    overflow-y: auto; /* Add scrolling if content overflows */
-}
+ /* Cart Container */
+    #cart-container {
+        display: flex; /* Use flexbox */
+        flex-direction: column; /* Stack the content vertically */
+        justify-content: flex-start; /* Align content at the top */
+        position: fixed;
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%); /* Offset by half of its own width and height to center */
+        background-color: #2F3340;
+        border: 1px solid #3E4352;
+        border-radius: 10px;
+        padding: 20px;
+        max-width: 800px; /* Same width as other containers */
+        width: 100%; /* Ensure it takes up available width */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        z-index: 9999; /* Ensure it's on top of other elements */
+        height: auto; /* Allow the height to adjust based on the content */
+        max-height: 80vh; /* Set a maximum height (80% of viewport height) */
+        overflow-y: auto; /* Add scrolling if content overflows */
+    }
 
-#cart-icon {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    background-color: #2F3340;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: visibility 0s, transform 0.3s ease;
-}
+    /* Cart Content */
+    #cart-container .content {
+        flex-grow: 1; /* Allow this part of the container to take up the available space */
+        overflow-y: auto; /* Scrollable content area */
+        max-height: 60vh; /* Control the max height for better display */
+        box-shadow: inset 0 -8px 10px rgba(0, 0, 0, 0.1); /* Shadow to indicate more content */
+    }
 
-#cart-icon.hidden {
-    visibility: hidden;
-}
+    /* Buttons */
+    #cart-container button {
+        width: 100%; /* Make buttons responsive */
+        max-width: 300px; /* Limit width to avoid oversized buttons on wide screens */
+        background-color: #3E4352;
+        color: #FFFFFF96;
+        border: 2px solid #3E4352;
+        border-radius: 6px;
+        padding: 12px 15px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9rem;
+        margin-top: 10px;
+        margin-bottom: 20px; /* Ensure some spacing between the button and bottom edge */
+        transition: background-color 0.3s ease; /* Hover effect */
+    }
 
-#cart-icon.visible {
-    visibility: visible;
-}
+    #cart-container button:hover {
+        background-color: #4F5660;
+    }
 
-/* For Minimize Button */
-#minimize-btn {
-    background-color: #D9534F;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    padding: 4px 8px;
-    font-size: 0.8rem;
-    margin-top: 10px;
-}
+    /* Minimize Button */
+    #minimize-btn {
+        background-color: #D9534F; /* Bold color */
+        color: white;
+        border: none;
+        border-radius: 8px; /* Rounded edges for a more modern look */
+        cursor: pointer;
+        padding: 8px 15px;
+        font-size: 1rem;
+        transition: background-color 0.3s ease; /* Hover effect */
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
 
-/* For Cart Item List */
-#cart-container ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin-bottom: 20px; /* Adds space between items */
-}
+    #minimize-btn:hover {
+        background-color: #C33D3D; /* Darker shade on hover */
+    }
 
-/* Cart Button */
-#cart-container button {
-    background-color: #3E4352;
-    color: #FFFFFF96;
-    border: 2px solid #3E4352;
-    border-radius: 6px;
-    padding: 12px 15px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 0.9rem;
-    margin-top: 10px;
-}
+    /* Cart Icon */
+    #cart-icon {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        background-color: #2F3340;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: visibility 0s, transform 0.3s ease;
+    }
 
+    #cart-icon.hidden {
+        visibility: hidden;
+    }
 
-#cart-icon svg {
-    fill: white;  /* You can use an SVG icon for the cart if desired */
-}
+    #cart-icon.visible {
+        visibility: visible;
+    }
 
+    /* Cart Button */
+    #cart-container button.checkout-btn {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #3E4352;
+        color: #FFFFFF96;
+        border: 2px solid #3E4352;
+        border-radius: 6px;
+        padding: 12px 15px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    #cart-icon svg {
+        fill: white;
+        transition: fill 0.3s ease; /* Smooth color transition for the icon */
+    }
+
+    #cart-icon:hover svg {
+        fill: #D9534F; /* Change color on hover */
+    }
 
 
 
