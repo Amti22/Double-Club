@@ -12,6 +12,7 @@ from pytz import FixedOffset, UTC
 from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
 import requests
+import logging
 
 
 # Flask app setup
@@ -38,39 +39,47 @@ sheets_service = build('sheets', 'v4', credentials=credentials)
 from datetime import datetime
 from pytz import FixedOffset, UTC
 
-# Function to send a message to Discord
+# Enable logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Function to send bet details to Discord
+# Function to send bet details to Discord
+# Function to send bet details to Discord
 def send_bet_to_discord(bet_details):
+    logging.debug("Bet details to send to Discord:")
+    logging.debug(bet_details)
+
+    # Access the 'content' key from bet_details
+    message = bet_details.get('content', 'No bet details available')
+
+    # Actual Discord Webhook URL
+    discord_webhook_url = 'https://discord.com/api/webhooks/1322269431761604760/JqbwTRPdxX0EZ_oqrhJJhrfZRBkVwlt7-0pvH4bHeQHTl9rJovSc3kRvnIAp-ae6dgx_'
+    payload = {"content": message}
+
     try:
-        bet_message = (
-            f"**Bet placed on {bet_details['selectedOption'].capitalize()}**\n"
-            f"Odds: {bet_details['selectedOdds']}\n"
-            f"Amount: ${bet_details['betAmountUSD']} (approx. £{bet_details['betAmountGBP']} GBP)\n\n"
-            f"**Match**: {bet_details['homeTeam']} vs {bet_details['awayTeam']}\n"
-            f"**Date**: {bet_details['matchDate']}\n"
-            f"**Bet placed at**: {bet_details['currentDateTime']}\n"
-        )
+        response = requests.post(discord_webhook_url, json=payload)
 
-        # Sending the message to Discord via webhook
-        response = requests.post(DISCORD_WEBHOOK_URL, json={"content": bet_message})
-        if response.status_code == 204:
-            print("Message successfully sent to Discord.")
-        else:
-            print(f"Failed to send message. Status code: {response.status_code}")
+        # Check if the status code is not 204, which means the request was successful but no content is returned
+        if response.status_code != 204:
+            raise Exception(f"Failed to send bet details to Discord: {response.text}")
+
+        logging.debug("Bet details successfully sent to Discord")
     except Exception as e:
-        print(f"Error sending bet details to Discord: {e}")
+        logging.error(f"Error sending bet details to Discord: {e}")
+        raise
 
-# Endpoint to save the bet details
+
+# Flask route to handle saving bet details
 @app.route('/save_bet', methods=['POST'])
 def save_bet():
     try:
-        # Get the bet details from the request
         bet_details = request.get_json()
-
-        # Prepare the bet details to be sent to Discord
+        logging.debug("Received bet details:")
+        logging.debug(bet_details)
         send_bet_to_discord(bet_details)
-
         return 'Bet details sent to Discord successfully', 200
     except Exception as e:
+        logging.error(f"Error saving bet details: {e}")
         return f"Error saving bet details: {e}", 500
 
 
@@ -249,7 +258,7 @@ def create_sheets_service():
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index-single.html')
 
 @app.route('/football')
 def football():
@@ -258,6 +267,14 @@ def football():
 @app.route('/basketball')
 def basketball():
     return render_template('index-Basketball.html')
+
+@app.route('/acumulator')
+def acumulator():
+    return render_template('index-acumulator.html')
+
+@app.route('/single')
+def single():
+    return render_template('index-single.html')
 
 
 
