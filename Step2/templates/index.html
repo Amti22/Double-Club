@@ -487,7 +487,7 @@ document.getElementById('minimize-btn').addEventListener('click', () => {
 // Handle the checkout button click
 document.getElementById('checkout-btn').addEventListener('click', () => {
     if (cartItems.length === 0) {
-        alert('Your cart is empty. Please add items before checking out.');
+        console.log('Your cart is empty. Please add items before checking out.');
         return;
     }
 
@@ -495,16 +495,37 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     const totalAmountUSD = cartItems.reduce((total, bet) => total + bet.betAmountUSD, 0);
     const totalAmountGBP = (totalAmountUSD * 0.80).toFixed(2); // Convert to GBP if necessary
 
-    // Confirm the checkout details
-    const confirmMessage = `You have ${cartItems.length} bet(s) in your cart, totaling $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP).\n\nClick OK to proceed to payment.`;
+    // Prepare the checkout details message
+    const betDetailsMessage = cartItems.map(bet => {
+        return `${bet.match} - ${bet.selectedOption} odds ${bet.selectedOdds} - $${bet.betAmountUSD}`;
+    }).join('\n');
 
-    if (confirm(confirmMessage)) {
-        const paypalLink = `https://www.paypal.com/paypalme/DoubleClubChannel/${totalAmountUSD.toFixed(2)}?currency_code=USD`;
-        window.open(paypalLink, '_blank');
-    } else {
-        alert('Payment canceled.');
-    }
+    const checkoutMessage = {
+        content: `**New Bet Checkout**\n\n${betDetailsMessage}\n\nTotal: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`,
+    };
+
+    // Send the checkout details to the server via the /save_bet endpoint
+    fetch('/save_bet', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(checkoutMessage),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Successfully sent to Discord:', data);
+    })
+    .catch(error => {
+        console.error('Error sending to Discord:', error);
+    });
+
+    // Open the PayPal link in the same time as the request
+    const paypalLink = `https://www.paypal.com/paypalme/DoubleClubChannel/${totalAmountGBP}?currency_code=GBP`;
+    window.open(paypalLink, '_blank');
 });
+
+
 
 
 
@@ -719,16 +740,16 @@ function renderMatches(matches) {
             });
         });
 
-        // Modify the buyButton click event to add the bet to the cart
+// Modify the buyButton click event to add the bet to the cart
 buyButton.addEventListener('click', () => {
     if (!selectedOption || !selectedOdds) {
-        alert('Please select an option before buying.');
+        console.log('Please select an option before buying.');
         return;
     }
 
     const betAmountUSD = parseFloat(betInput.value) || 0;
     if (betAmountUSD <= 0) {
-        alert('Please enter a valid bet amount.');
+        console.log('Please enter a valid bet amount.');
         return;
     }
 
@@ -740,50 +761,18 @@ buyButton.addEventListener('click', () => {
     const exchangeRate = 0.80;
     const betAmountGBP = (betAmountUSD * exchangeRate).toFixed(2);
 
-    const confirmMessage = `Bet placed on ${selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)} at odds ${selectedOdds} with $${betAmountUSD} (approx. £${betAmountGBP} GBP).\n\nMatch: ${homeTeam} vs ${awayTeam}\nDate: ${matchDate}\n\nClick OK to proceed to payment.`;
+    // Automatically proceed to save the bet to the cart without confirmation
+    updateCart({
+        match: matchName,
+        selectedOption,
+        selectedOdds,
+        betAmountUSD,
+    });
 
-    if (confirm(confirmMessage)) {
-
-        // Save bet to the cart
-        updateCart({
-            match: matchName,
-            selectedOption,
-            selectedOdds,
-            betAmountUSD,
-
-        });
-
-        // Send the bet details to the server to save in orders.txt
-        fetch('/save_bet', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                selectedOption,
-                selectedOdds,
-                betAmountUSD,
-                betAmountGBP,
-                homeTeam,
-                awayTeam,
-                matchDate,
-                currentDateTime: new Date().toISOString() // Add the current timestamp
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Bet details saved successfully');
-            } else {
-                console.error('Failed to save bet details');
-            }
-        })
-        .catch(error => {
-            console.error('Error saving bet details:', error);
-        });
-    } else {
-        alert("Payment canceled.");
-    }
+    // Optionally, log the action to the console
+    console.log(`Bet placed on ${selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)} at odds ${selectedOdds} with $${betAmountUSD} (approx. £${betAmountGBP} GBP).\n\nMatch: ${homeTeam} vs ${awayTeam}\nDate: ${matchDate}`);
 });
+
 
 
         function handleBetOptionChange() {
