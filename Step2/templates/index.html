@@ -8,7 +8,6 @@
     <style>
 
  /* Cart Container */
-    /* Cart Container */
     #cart-container {
         display: flex; /* Use flexbox */
         flex-direction: column; /* Stack the content vertically */
@@ -27,15 +26,13 @@
         transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
         z-index: 9998; /* Ensure it's below the cart icon */
         height: auto; /* Allow the height to adjust based on the content */
-        max-height: 100vh; /* Increase the max height to 90% of viewport height */
-        overflow-y: auto; /* Add scrolling if content overflows */
+        overflow-y: auto; /* Enable scrolling if content overflows */
     }
 
     /* Cart Content */
     #cart-container .content {
         flex-grow: 1; /* Allow this part of the container to take up the available space */
         overflow-y: auto; /* Scrollable content area */
-        max-height: 60vh; /* Control the max height for better display */
         box-shadow: inset 0 -8px 10px rgba(0, 0, 0, 0.1); /* Shadow to indicate more content */
     }
 
