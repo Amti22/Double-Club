@@ -1,299 +1,980 @@
-from flask import Flask, render_template, jsonify, request
-from datetime import datetime, timedelta
-from pytz import UTC, FixedOffset
-from googleapiclient.discovery import build
-from google.oauth2.service_account import Credentials
-import base64
-import json
-import tempfile
-from flask import Flask, render_template, jsonify, request
-from datetime import datetime
-from pytz import FixedOffset, UTC
-from googleapiclient.discovery import build
-from google.oauth2.service_account import Credentials
-import requests
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Betting Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+
+#cart-container {
+    display: none; /* Initially hidden */
+    position: fixed;
+    bottom: 70px; /* Space between cart icon and container */
+    right: 10px;
+    background-color: #2F3340;
+    border: 1px solid #3E4352;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+#cart-icon {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: #2F3340;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;  /* Use flexbox to center content */
+    justify-content: center;  /* Center horizontally */
+    align-items: center;  /* Center vertically */
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: visibility 0s, transform 0.3s ease; /* Smooth transition for visibility and transformation */
+}
+
+#cart-icon.hidden {
+    visibility: hidden; /* Make the cart icon invisible but keep its position */
+}
+
+#cart-icon.visible {
+    visibility: visible; /* Make the cart icon visible */
+}
+
+#minimize-btn {
+    background-color: #D9534F;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    margin-top: 10px;
+}
+
+#cart-container ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#cart-container button {
+    background-color: #3E4352;
+    color: #FFFFFF96;
+    border: 2px solid #3E4352;
+    border-radius: 6px;
+    padding: 12px 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+#cart-icon svg {
+    fill: white;  /* You can use an SVG icon for the cart if desired */
+}
 
 
-# Flask app setup
-app = Flask(__name__)
-
-# Google Sheets configuration
-SPREADSHEET_ID = '1ZV-oZTpSee2xF0BET84SsAtpTQPLsm0fhZDKfd18E00'
-
-RANGE_NAME = 'Sheet1!A:CF'  # Adjust based on your sheet's data range
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-SERVICE_ACCOUNT_FILE = 'credentials.json'
-ENCODED_CREDENTIALS_FILE = 'Credentials-Encoded.json'
-
-# Discord Webhook Configuration
-DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1322269431761604760/JqbwTRPdxX0EZ_oqrhJJhrfZRBkVwlt7-0pvH4bHeQHTl9rJovSc3kRvnIAp-ae6dgx_'
-
-# Load credentials and create a Sheets API client
-credentials = Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE, scopes=SCOPES
-)
-sheets_service = build('sheets', 'v4', credentials=credentials)
 
 
-from datetime import datetime
-from pytz import FixedOffset, UTC
-
-# Function to send a message to Discord
-def send_bet_to_discord(bet_details):
-    try:
-        bet_message = (
-            f"**Bet placed on {bet_details['selectedOption'].capitalize()}**\n"
-            f"Odds: {bet_details['selectedOdds']}\n"
-            f"Amount: ${bet_details['betAmountUSD']} (approx. £{bet_details['betAmountGBP']} GBP)\n\n"
-            f"**Match**: {bet_details['homeTeam']} vs {bet_details['awayTeam']}\n"
-            f"**Date**: {bet_details['matchDate']}\n"
-            f"**Bet placed at**: {bet_details['currentDateTime']}\n"
-        )
-
-        # Sending the message to Discord via webhook
-        response = requests.post(DISCORD_WEBHOOK_URL, json={"content": bet_message})
-        if response.status_code == 204:
-            print("Message successfully sent to Discord.")
-        else:
-            print(f"Failed to send message. Status code: {response.status_code}")
-    except Exception as e:
-        print(f"Error sending bet details to Discord: {e}")
-
-# Endpoint to save the bet details
-@app.route('/save_bet', methods=['POST'])
-def save_bet():
-    try:
-        # Get the bet details from the request
-        bet_details = request.get_json()
-
-        # Prepare the bet details to be sent to Discord
-        send_bet_to_discord(bet_details)
-
-        return 'Bet details sent to Discord successfully', 200
-    except Exception as e:
-        return f"Error saving bet details: {e}", 500
+        .sport-dropdown {
+            padding: 10px;
+            font-size: 1rem;
+            background-color: #3E4352;
+            color: #FFFFFF96;
+            border: none;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
 
 
-# Function to decode the credentials and use them
-def decode_credentials():
-    try:
-        # Read the encoded credentials from the JSON file
-        with open(ENCODED_CREDENTIALS_FILE, 'r') as f:
-            encoded_data = json.load(f)
 
-        # Decode the base64 encoded credentials
-        encoded_credentials = encoded_data.get('encoded_credentials')
-        if not encoded_credentials:
-            raise ValueError("No encoded credentials found in the file")
+        :root {
+            --primary-black: #FFFFFF96;
+            --primary-white: #FFFFFF;
+            --secondary-gray: #FFFFFF96;
+            --accent-red: #E63946;
+            --accent-blue: #457B9D;
+            --background-gray: #F8F9FA;
+            --Content1: #FFFFFF96;
+            --Headling2:#FF7A7A;
+            --Overline: #9892E0;
+            --Button-label: ##FFFFFF96;
+        }
 
-        decoded_credentials = base64.b64decode(encoded_credentials)
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
 
-        # Create a temporary file to store the decoded credentials
-        with tempfile.NamedTemporaryFile(delete=False, mode='wb') as temp_file:
-            temp_file.write(decoded_credentials)
-            temp_file_path = temp_file.name
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: transparent;
+            color: #FFFFFF96;
+            line-height: 1.6;
+        }
 
-        return temp_file_path
+        /* Navigation */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background-color: rgba(255,255,255,0.95);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
 
-    except Exception as e:
-        print(f"Error decoding credentials: {e}")
-        return None
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+        }
 
-def fetch_matches_from_sheets():
-    try:
-        sheets_service = create_sheets_service()
-        if not sheets_service:
-            print("Failed to create Sheets API service.")
-            return []
+        .navbar-links a {
+            text-decoration: none;
+            color: #FFFFFF96;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-left: 20px;
+            font-size: 0.9rem;
+            position: relative;
+        }
 
-        # Fetch the data from the Google Sheet
-        sheet = sheets_service.spreadsheets()
-        result = sheet.values().get(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME).execute()
-        rows = result.get('values', [])
+        .navbar-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #FFFFFF96;
+            transition: width 0.3s;
+        }
 
-        matches = []
-        current_time = datetime.now(UTC)
+        .navbar-links a:hover::after {
+            width: 100%;
+        }
 
-        for index, row in enumerate(rows):
-            print(f"Processing row {index}, total columns: {len(row)}")
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
 
-            # Skip rows that don't have the expected number of columns
-            if len(row) < 20 or 'N/A' in row:
-                continue
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
 
-            match_data = {
-                'home_team': row[4],  # Adjust indices based on your sheet structure
-                'away_team': row[5],
-                'sport': row[6],
-                'odds': {
-                    'home_odds': row[15],
-                    'draw_odds': row[16],
-                    'away_odds': row[17],
-                    'bts_yes': row[8],
-                    'bts_no': row[9],
-                    'dc_1x': row[10],
-                    'dc_12': row[11],
-                    'dc_x2': row[12],
-                    'dnb_1': row[13],
-                    'dnb_2': row[14],
-                    'ov_1d5': row[78] if len(row) > 78 else None,
-                    'ov_2d5': row[80] if len(row) > 80 else None,
-                    'ov_3d5': row[82] if len(row) > 82 else None,
-                    'un_1d5': row[79] if len(row) > 79 else None,
-                    'un_2d5': row[81] if len(row) > 81 else None,
-                    'un_3d5': row[80] if len(row) > 80 else None,
+        /* Match Container */
+        .match-container {
+            background-color: #2F3340;
+            border: 1px solid #3E4352;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-                    'ah1_m3d75': row[18],  # AH 1 -3.75
-                    'ah2_m3d75': row[19],  # AH 2 -3.75
-                    'ah1_m3d5': row[20],   # AH 1 -3.5
-                    'ah2_m3d5': row[21],   # AH 2 -3.5
-                    'ah1_m3d25': row[22],  # AH 1 -3.25
-                    'ah2_m3d25': row[23],  # AH 2 -3.25
-                    'ah1_m3': row[24],     # AH 1 -3.0
-                    'ah2_m3': row[25],     # AH 2 -3.0
+        .match-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
 
-                    'ah1_m2d75': row[26],  # AH 1 -2.75
-                    'ah2_m2d75': row[27],  # AH 2 -2.75
-                    'ah1_m2d5': row[28],   # AH 1 -2.5
-                    'ah2_m2d5': row[29],   # AH 2 -2.5
-                    'ah1_m2d25': row[30],  # AH 1 -2.25
-                    'ah2_m2d25': row[31],  # AH 2 -2.25
-                    'ah1_m2': row[32],     # AH 1 -2.0
-                    'ah2_m2': row[33],     # AH 2 -2.0
+        .match-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+        }
 
-                    'ah1_m1d75': row[34],  # AH 1 -1.75
-                    'ah2_m1d75': row[35],  # AH 2 -1.75
-                    'ah1_m1d5': row[36],   # AH 1 -1.5
-                    'ah2_m1d5': row[37],   # AH 2 -1.5
-                    'ah1_m1d25': row[38],  # AH 1 -1.25
-                    'ah2_m1d25': row[39],  # AH 2 -1.25
-                    'ah1_m1': row[40],     # AH 1 -1.0
-                    'ah2_m1': row[41],     # AH 2 -1.0
-
-                    'ah1_m0d75': row[42],  # AH 1 -0.75
-                    'ah2_m0d75': row[43],  # AH 2 -0.75
-                    'ah1_m0d5': row[44],   # AH 1 -0.5
-                    'ah2_m0d5': row[45],   # AH 2 -0.5
-                    'ah1_m0d25': row[46],  # AH 1 -0.25
-                    'ah2_m0d25': row[47],  # AH 2 -0.25
-                    'ah1_m0': row[48],     # AH 1 0.0
-                    'ah2_m0': row[49],     # AH 2 0.0
-
-                    'ah1_p1d75': row[50],  # AH 1 +0.75
-                    'ah2_p1d75': row[51],  # AH 2 +0.75
-                    'ah1_p1d5': row[52],   # AH 1 +1.5
-                    'ah2_p1d5': row[53],   # AH 2 +1.5
-                    'ah1_p1d25': row[54],  # AH 1 +1.25
-                    'ah2_p1d25': row[55],  # AH 2 +1.25
-                    'ah1_p1': row[56],     # AH 1 +1.0
-                    'ah2_p1': row[57],     # AH 2 +1.0
-
-                    'ah1_p2d75': row[58],  # AH 1 +2.75
-                    'ah2_p2d75': row[59],  # AH 2 +2.75
-                    'ah1_p2d5': row[60],   # AH 1 +2.5
-                    'ah2_p2d5': row[61],   # AH 2 +2.5
-                    'ah1_p2d25': row[62],  # AH 1 +2.25
-                    'ah2_p2d25': row[63],  # AH 2 +2.25
-                    'ah1_p2': row[64],     # AH 1 +2.0
-                    'ah2_p2': row[65],     # AH 2 +2.0
-
-                    'ah1_p3d5': row[76],   # AH 1 +3.5
-                    'ah2_p3d5': row[77],   # AH 2 +3.5
-                    'ah1_p3d25': row[74],  # AH 1 +3.25
-                    'ah2_p3d25': row[75],  # AH 2 +3.25
-                    'ah1_p3': row[72],     # AH 1 +3.0
-                    'ah2_p3': row[73]      # AH 2 +3.0
+        .match-header-time {
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;  /* This makes the text bold */
+        }
 
 
+        .match-header span {
+            font-size: 1.2rem;
+        }
+
+
+
+        .bet-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bet-amount {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #3E4352;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+
+
+        }
+
+        .button-group .bts-yes-btn {
+            order: 1; /* Ensure "No" stays on the right */
+        }
+        .button-group .bts-no-btn {
+            order: 3; /* Ensure "No" stays on the right */
+        }
+
+        .button-group .bts-hidden-btn {
+            order: 2; /* Ensure "No" stays on the right */
+            visibility: hidden;
+        }
+
+        .button-group .dnb-1-btn {
+            order: 1; /* Ensure "1" stays on the right */
+        }
+        .button-group .dnb-2-btn {
+            order: 3; /* Ensure "2" stays on the right */
+        }
+
+
+
+
+        .button-group button {
+            background-color: #3E4352;
+            color: var(--Button-label);
+            border: 2px solid #3E4352;
+            border-radius: 6px;
+            padding: 12px 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .button-group button:hover {
+            background-color: var(--primary-black);
+            color: var(--Button-label);
+        }
+
+        .button-group button.active {
+            background-color: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: var(--Button-label);
+        }
+
+        .return-display {
+            text-align: right;  /* Keep expected return on the right */
+            font-weight: 600;
+            color: #FFFFFF96;
+            margin-top: 15px;
+            display: block;  /* Ensure it's displayed */
+        }
+
+        .membership-return {
+            text-align: right;  /* Align to the right side */
+            font-weight: 600;
+            color: var(--Overline);
+            margin-top: 15px;
+            display: block;  /* Make sure it's always visible */
+        }
+
+        .buy-button {
+            width: 100%;
+            background-color: #3E4352;
+            color: var(--Button-label);
+            border: none;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .buy-button:hover {
+            background-color: var(--accent-red);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary-black);
+            color: #FFFFFF96;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            font-size: 0.8rem;
+            color: #CCCCCC;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                align-items: center;
+            }
+            .navbar-links {
+                margin-top: 10px;
+            }
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<select id="sport-filter" class="sport-dropdown">
+    <option value="">Select Sport</option>
+</select>
+
+<div id="cart-icon" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <span style="color: #fff; font-size: 24px;">🛒</span>
+    <!-- Notification Badge (Initially hidden) -->
+    <span id="cart-badge" style="position: absolute; top: -5px; right: -5px; background-color: #D9534F; color: white; border-radius: 50%; width: 20px; height: 20px; display: none; justify-content: center; align-items: center; font-size: 12px; font-weight: bold; text-align: center;">
+        0
+    </span>
+</div>
+
+
+<!-- Cart Container (Initially Hidden) -->
+<div id="cart-container" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border: 1px solid #3E4352; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: none; width: 300px;">
+    <h3 style="color: #FFFFFF96; font-weight: 700;">Your Cart</h3>
+    <ul id="cart-list" style="list-style-type: none; padding-left: 0; color: #FFFFFF96;"></ul>
+    <div id="total-amount" style="color: #FFFFFF96; margin-top: 10px;">Total: $0.00 (approx. £0.00 GBP)</div>
+    <button id="checkout-btn" style="background-color: #3E4352; color: #FFFFFF96; border: 2px solid #3E4352; border-radius: 6px; padding: 12px 15px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 10px;">Checkout</button>
+    <button id="minimize-btn" style="background-color: #D9534F; color: white; border: none; border-radius: 6px; cursor: pointer; padding: 4px 8px; font-size: 0.8rem; margin-top: 10px;">Minimize</button>
+</div>
+
+
+
+<div class="container">
+    <h1 class="section-title"></h1>
+    <div id="matches-list"></div>
+</div>
+
+<script>
+let cartItems = []; // Array to store the individual bets in the cart
+
+// Function to update the cart with a new bet
+function updateCart(betDetails) {
+    const cartContainer = document.getElementById('cart-container');
+    const cartList = document.getElementById('cart-list');
+    const cartBadge = document.getElementById('cart-badge');  // Get the notification badge element
+
+    // Create a new list item for the bet placed
+    const listItem = document.createElement('li');
+    listItem.textContent = `${betDetails.match} - ${betDetails.selectedOption} odds ${betDetails.selectedOdds} - $${betDetails.betAmountUSD}`;
+
+    // Create a "Remove" button for the bet
+    const removeButton = document.createElement('button');
+    removeButton.textContent = 'Remove';
+    removeButton.style.marginLeft = '10px';
+    removeButton.style.backgroundColor = '#D9534F';
+    removeButton.style.color = 'white';
+    removeButton.style.border = 'none';
+    removeButton.style.borderRadius = '6px';
+    removeButton.style.cursor = 'pointer';
+    removeButton.style.padding = '4px 8px';
+
+    // Add event listener to remove the bet from the cart
+    removeButton.addEventListener('click', () => {
+        removeBet(listItem, betDetails);
+    });
+
+    // Add the remove button to the list item
+    listItem.appendChild(removeButton);
+
+    // Add the new bet to the cart
+    cartList.appendChild(listItem);
+
+    // Add the bet to the cartItems array
+    cartItems.push(betDetails);
+
+    // Update the total amount live
+    updateTotalAmount();
+
+    // Update the cart items count and show the notification badge
+    cartBadge.textContent = cartItems.length;
+    cartBadge.style.display = 'flex';  // Make the notification badge visible
+}
+
+// Function to remove a bet from the cart
+function removeBet(listItem, betDetails) {
+    const cartBadge = document.getElementById('cart-badge');  // Get the notification badge element
+
+    // Remove the bet from the cartItems array
+    cartItems = cartItems.filter(item => item !== betDetails);
+
+    // Remove the list item from the DOM
+    listItem.remove();
+
+    // Update the total amount live after removal
+    updateTotalAmount();
+
+    // Update the cart items count
+    cartBadge.textContent = cartItems.length;
+
+    // If no items are left in the cart, hide the notification badge
+    if (cartItems.length === 0) {
+        cartBadge.style.display = 'none';
+    }
+}
+
+// Function to update the total amount after every change
+function updateTotalAmount() {
+    const totalAmountUSD = cartItems.reduce((total, bet) => total + bet.betAmountUSD, 0);
+    const totalAmountGBP = (totalAmountUSD * 0.80).toFixed(2); // Convert to GBP if necessary
+
+    // Update the total amount display dynamically
+    document.getElementById('total-amount').textContent = `Total: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`;
+}
+
+// Handle cart icon click to toggle the cart container visibility
+document.getElementById('cart-icon').addEventListener('click', () => {
+    const cartContainer = document.getElementById('cart-container');
+    const cartIcon = document.getElementById('cart-icon');
+
+    // Toggle the cart visibility
+    if (cartContainer.style.display === 'none' || !cartContainer.style.display) {
+        cartContainer.style.display = 'block'; // Show the cart container
+        cartIcon.classList.add('hidden'); // Hide the cart icon
+        cartIcon.classList.remove('visible');
+    } else {
+        cartContainer.style.display = 'none'; // Hide the cart container
+        cartIcon.classList.remove('hidden'); // Show the cart icon
+        cartIcon.classList.add('visible');
+    }
+});
+
+// Handle minimize button click to hide the cart and show the icon again
+document.getElementById('minimize-btn').addEventListener('click', () => {
+    const cartContainer = document.getElementById('cart-container');
+    const cartIcon = document.getElementById('cart-icon');
+
+    // Hide the expanded cart container
+    cartContainer.style.display = 'none';
+
+    // Show the cart icon again and make it visible
+    cartIcon.classList.remove('hidden');
+    cartIcon.classList.add('visible');
+});
+
+// Handle the checkout button click
+document.getElementById('checkout-btn').addEventListener('click', () => {
+    if (cartItems.length === 0) {
+        alert('Your cart is empty. Please add items before checking out.');
+        return;
+    }
+
+    // Calculate the total bet amount
+    const totalAmountUSD = cartItems.reduce((total, bet) => total + bet.betAmountUSD, 0);
+    const totalAmountGBP = (totalAmountUSD * 0.80).toFixed(2); // Convert to GBP if necessary
+
+    // Confirm the checkout details
+    const confirmMessage = `You have ${cartItems.length} bet(s) in your cart, totaling $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP).\n\nClick OK to proceed to payment.`;
+
+    if (confirm(confirmMessage)) {
+        const paypalLink = `https://www.paypal.com/paypalme/DoubleClubChannel/${totalAmountUSD.toFixed(2)}?currency_code=USD`;
+        window.open(paypalLink, '_blank');
+    } else {
+        alert('Payment canceled.');
+    }
+});
+
+
+
+    async function fetchSports() {
+        try {
+            const response = await fetch('/sports');
+            if (!response.ok) throw new Error('Error fetching sports');
+
+            const sports = await response.json();
+            const sportFilter = document.getElementById('sport-filter');
+
+            sports.forEach(sport => {
+                const option = document.createElement('option');
+                option.value = sport;
+                option.textContent = sport.charAt(0).toUpperCase() + sport.slice(1);
+                sportFilter.appendChild(option);
+            });
+        } catch (error) {
+            console.error(error);
+            alert('Could not load sports at this time. Please try again later.');
+        }
+    }
+
+    async function fetchMatches() {
+        const sport = document.getElementById('sport-filter').value;
+        const url = sport ? `/matches?sport=${sport}` : '/matches';
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Error fetching matches');
+
+            const matches = await response.json();
+            if (matches.length > 0) {
+                // Sort matches by date and time
+                matches.sort((a, b) => {
+                    const [dateA, timeA] = a.formatted_date.split(' - ');
+                    const [dateB, timeB] = b.formatted_date.split(' - ');
+
+                    const [dayA, monthA, yearA] = dateA.split('/');
+                    const [dayB, monthB, yearB] = dateB.split('/');
+
+                    // Format date into 'YYYY-MM-DD' for proper comparison
+                    const dateTimeA = new Date(`${yearA}-${monthA}-${dayA}T${timeA}`);
+                    const dateTimeB = new Date(`${yearB}-${monthB}-${dayB}T${timeB}`);
+
+                    return dateTimeA - dateTimeB; // Ascending order (earliest first)
+                });
+                renderMatches(matches);
+            } else {
+                document.getElementById('matches-list').innerHTML = '<p>No matches available</p>';
+            }
+        } catch (error) {
+            console.error(error);
+            document.getElementById('matches-list').innerHTML = '<p>Failed to load matches. Please try again later.</p>';
+        }
+    }
+
+
+function renderMatches(matches) {
+    const matchesList = document.getElementById('matches-list');
+    matchesList.innerHTML = '';
+
+    matches.forEach(match => {
+        const matchDiv = document.createElement('div');
+        matchDiv.classList.add('match-container');
+        matchDiv.setAttribute('data-id', match.id);
+
+        // Check if odds are available and show/hide elements accordingly
+        const homeOdds = match.odds.home_odds !== 'n/a';
+        const drawOdds = match.odds.draw_odds !== 'n/a';
+        const awayOdds = match.odds.away_odds !== 'n/a';
+
+        // Only display match if at least one odd is available
+        if (homeOdds || drawOdds || awayOdds) {
+            matchDiv.innerHTML = `
+                <div class="match-header">
+                    <span>${match.home_team}</span>
+                </div>
+                    <div class="match-header">
+                    <span>VS</span>
+                </div>
+                </div>
+                    <div class="match-header">
+                    <span>${match.away_team}</span>
+                </div>
+
+                <div class="odds-display" style="text-align: center;">
+                    <strong></strong>
+                    ${homeOdds ? `${match.formatted_date}` : ''}
+                </div>
+                <div class="bet-container">
+                    <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1">
+                    <div class="button-group">
+                        ${homeOdds ? `<button class="home-btn">Home: ${match.odds.home_odds}</button>` : ''}
+                        ${drawOdds ? `<button class="draw-btn">Draw: ${match.odds.draw_odds}</button>` : ''}
+                        ${awayOdds ? `<button class="away-btn">Away: ${match.odds.away_odds}</button>` : ''}
+                    </div>
+                    <!-- Betting Option Dropdown -->
+                    <select class="bet-option-dropdown">
+                        <option value="1X2" selected>1X2</option>  <!-- Default selected -->
+                        <option value="BTS">Both Teams Score</option>
+                        <option value="DNB">Draw No Bet</option>
+                        <option value="DC">Double Chance</option>
+                    </select>
+                </div>
+                <div class="return-display">Expected Return: $0</div>
+                <div class="membership-return">Double-Club Membership Return: $0</div>
+                <button class="buy-button" style="display: none;">Place Bet</button>
+            `;
+
+            matchesList.appendChild(matchDiv);
+            attachListeners(matchDiv, match);
+        }
+    });
+}
+
+
+
+    function attachListeners(matchDiv, match) {
+        const betInput = matchDiv.querySelector('.bet-amount');
+        const returnDisplay = matchDiv.querySelector('.return-display');
+        const membershipReturnDisplay = matchDiv.querySelector('.membership-return');
+        const buyButton = matchDiv.querySelector('.buy-button');
+        const betOptionDropdown = matchDiv.querySelector('.bet-option-dropdown');
+
+        let selectedOption = null;
+        let selectedOdds = null;
+
+        betInput.addEventListener('input', updateReturnDisplay);
+        betOptionDropdown.addEventListener('change', handleBetOptionChange);
+
+        // Handle Yes/No buttons for BTS
+        matchDiv.querySelectorAll('.bts-yes-btn, .bts-no-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                if (button.classList.contains('bts-yes-btn')) {
+                    selectedOption = 'yes';
+                    selectedOdds = match.odds.bts_yes;
+                } else if (button.classList.contains('bts-no-btn')) {
+                    selectedOption = 'no';
+                    selectedOdds = match.odds.bts_no;
                 }
+
+                updateReturnDisplay();
+            });
+        });
+
+        // Handle 1/2 buttons for DNB
+        matchDiv.querySelectorAll('.dnb-1-btn, .dnb-2-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                if (button.classList.contains('dnb-1-btn')) {
+                    selectedOption = '1';
+                    selectedOdds = match.odds.dnb_1;
+                } else if (button.classList.contains('dnb-2-btn')) {
+                    selectedOption = '2';
+                    selectedOdds = match.odds.dnb_2;
+                }
+
+                updateReturnDisplay();
+            });
+        });
+
+
+
+        // Handle 3 buttons forDC
+        matchDiv.querySelectorAll('.dc-1x-btn, .dc-12x-btn, .dc-x2-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                if (button.classList.contains('dc-1x-btn')) {
+                    selectedOption = '1x';
+                    selectedOdds = match.odds.dc_1x;
+                } else if (button.classList.contains('dc-12-btn')) {
+                    selectedOption = '12';
+                    selectedOdds = match.odds.dc_12;
+                }else if (button.classList.contains('dc-x2-btn')) {
+                    selectedOption = 'x2';
+                    selectedOdds = match.odds.dc_x2;
+                }
+
+                updateReturnDisplay();
+            });
+        });
+
+
+
+
+        // Handle Home, Draw, Away buttons
+        matchDiv.querySelectorAll('.home-btn, .draw-btn, .away-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                if (button.classList.contains('home-btn')) {
+                    selectedOption = 'home';
+                    selectedOdds = match.odds.home_odds;
+                } else if (button.classList.contains('draw-btn')) {
+                    selectedOption = 'draw';
+                    selectedOdds = match.odds.draw_odds;
+                } else if (button.classList.contains('away-btn')) {
+                    selectedOption = 'away';
+                    selectedOdds = match.odds.away_odds;
+                }
+
+                updateReturnDisplay();
+            });
+        });
+
+        // Modify the buyButton click event to add the bet to the cart
+buyButton.addEventListener('click', () => {
+    if (!selectedOption || !selectedOdds) {
+        alert('Please select an option before buying.');
+        return;
+    }
+
+    const betAmountUSD = parseFloat(betInput.value) || 0;
+    if (betAmountUSD <= 0) {
+        alert('Please enter a valid bet amount.');
+        return;
+    }
+
+    const matchDate = match.formatted_date;
+    const homeTeam = match.home_team;
+    const awayTeam = match.away_team;
+    const matchName = `${homeTeam} vs ${awayTeam}`;
+
+    const exchangeRate = 0.80;
+    const betAmountGBP = (betAmountUSD * exchangeRate).toFixed(2);
+
+    const confirmMessage = `Bet placed on ${selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)} at odds ${selectedOdds} with $${betAmountUSD} (approx. £${betAmountGBP} GBP).\n\nMatch: ${homeTeam} vs ${awayTeam}\nDate: ${matchDate}\n\nClick OK to proceed to payment.`;
+
+    if (confirm(confirmMessage)) {
+
+        // Save bet to the cart
+        updateCart({
+            match: matchName,
+            selectedOption,
+            selectedOdds,
+            betAmountUSD,
+
+        });
+
+        // Send the bet details to the server to save in orders.txt
+        fetch('/save_bet', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                selectedOption,
+                selectedOdds,
+                betAmountUSD,
+                betAmountGBP,
+                homeTeam,
+                awayTeam,
+                matchDate,
+                currentDateTime: new Date().toISOString() // Add the current timestamp
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Bet details saved successfully');
+            } else {
+                console.error('Failed to save bet details');
+            }
+        })
+        .catch(error => {
+            console.error('Error saving bet details:', error);
+        });
+    } else {
+        alert("Payment canceled.");
+    }
+});
+
+
+        function handleBetOptionChange() {
+            const selectedBetOption = betOptionDropdown.value;
+
+            if (selectedBetOption === 'BTS') {
+                // Replace the Home, Draw, Away buttons with Yes/No buttons
+                matchDiv.querySelector('.button-group').innerHTML = `
+                    <button class="bts-yes-btn">Yes: ${match.odds.bts_yes} </button>
+                    <button class="bts-no-btn">No: ${match.odds.bts_no}</button>
+                `;
+
+
+                // Clear previous odds as we're switching bet types
+                selectedOdds = null;
+
+                // Reattach event listeners for the new Yes/No buttons
+                attachBTSListeners(matchDiv);
+
+            } else if (selectedBetOption === 'DNB') {
+                // Replace the Home, Draw, Away buttons with 1/2 buttons
+                matchDiv.querySelector('.button-group').innerHTML = `
+                    <button class="dnb-1-btn">1: ${match.odds.dnb_1}</button>
+                    <button class="dnb-2-btn">2: ${match.odds.dnb_2}</button>
+                `;
+
+
+                // Clear previous odds as we're switching bet types
+                selectedOdds = null;
+
+                // Reattach event listeners for the new 1/2 buttons
+                attachDNBListeners(matchDiv);
+
+            } else if (selectedBetOption === 'DC') {
+                // Replace the current buttons with DC ones
+                matchDiv.querySelector('.button-group').innerHTML = `
+                    <button class="dc-1x-btn">1x: ${match.odds.dc_1x}</button>
+                    <button class="dc-12-btn">12: ${match.odds.dc_12}</button>
+                    <button class="dc-x2-btn">x2: ${match.odds.dc_x2}</button>
+                `;
+
+
+                // Clear previous odds as we're switching bet types
+                selectedOdds = null;
+
+                // Reattach event listeners for the new 1x/12/x2 buttons
+                attachDCListeners(matchDiv);
+
+
+
+            } else {
+                // Revert to the default 1X2 buttons (Home, Draw, Away)
+                matchDiv.querySelector('.button-group').innerHTML = `
+                    <button class="home-btn">Home: ${match.odds.home_odds}</button>
+                    <button class="draw-btn">Draw: ${match.odds.draw_odds}</button>
+                    <button class="away-btn">Away: ${match.odds.away_odds}</button>
+                `;
+
+
+
+                // Set the selected odds based on the previous button selection
+                if (selectedOption === 'home') {
+                    selectedOdds = match.odds.home_odds;
+                } else if (selectedOption === 'draw') {
+                    selectedOdds = match.odds.draw_odds;
+                } else if (selectedOption === 'away') {
+                    selectedOdds = match.odds.away_odds;
+                }
+
+                // Reattach event listeners for the Home, Draw, Away buttons
+                attach1X2Listeners(matchDiv);
             }
 
-            # Parse date and time
-            try:
-                date_value = row[1]
-                time_value = row[2]
-                if date_value == 'N/A' or time_value == 'N/A':
-                    continue
+            // Recalculate the expected return based on new bet option
+            updateReturnDisplay();
+        }
 
-                start_date_str = f"{date_value.strip()} {time_value.strip()}"
-                date_object = datetime.strptime(start_date_str, '%Y-%m-%d %H:%M:%S')
+            // Function to attach event listeners for Home, Draw, Away buttons
+        function attach1X2Listeners(matchDiv) {
+            matchDiv.querySelectorAll('.home-btn, .draw-btn, .away-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
 
-                if len(row) > 3 and row[3] != 'N/A':  # Parse timezone
-                    offset_hours, offset_minutes = map(int, row[3].split(':'))
-                    tz = FixedOffset(offset_hours * 60 + offset_minutes)
-                    date_object = date_object.replace(tzinfo=tz)
+                    if (button.classList.contains('home-btn')) {
+                        selectedOption = 'home';
+                        selectedOdds = match.odds.home_odds;
+                    } else if (button.classList.contains('draw-btn')) {
+                        selectedOption = 'draw';
+                        selectedOdds = match.odds.draw_odds;
+                    } else if (button.classList.contains('away-btn')) {
+                        selectedOption = 'away';
+                        selectedOdds = match.odds.away_odds;
+                    }
 
-                if date_object > current_time:
-                    match_data['formatted_date'] = date_object.strftime("%d/%m/%Y - %H:%M - %Z")
-                    matches.append(match_data)
+                    updateReturnDisplay();
+                });
+            });
+        }
 
-            except ValueError as e:
-                print(f"Error parsing date/time: {e}")
-                continue
+        // Function to attach event listeners for BTS Yes/No buttons
+        function attachBTSListeners(matchDiv) {
+            matchDiv.querySelectorAll('.bts-yes-btn, .bts-no-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
 
-        return matches
+                    if (button.classList.contains('bts-yes-btn')) {
+                        selectedOption = 'yes';
+                        selectedOdds = match.odds.bts_yes;
+                    } else if (button.classList.contains('bts-no-btn')) {
+                        selectedOption = 'no';
+                        selectedOdds = match.odds.bts_no;
+                    }
 
-    except Exception as e:
-        print(f"Error fetching data from Google Sheets: {e}")
-        return []
-
-# Load credentials and create a Sheets API client
-def create_sheets_service():
-    credentials_path = decode_credentials()
-    if credentials_path:
-        credentials = Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
-        sheets_service = build('sheets', 'v4', credentials=credentials)
-        return sheets_service
-    return None
-
-
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-@app.route('/football')
-def football():
-    return render_template('index-Football.html')
-
-@app.route('/basketball')
-def basketball():
-    return render_template('index-Basketball.html')
+                    updateReturnDisplay();
+                });
+            });
+        }
 
 
+        // Function to attach event listeners for DNB 1/2 buttons
+        function attachDNBListeners(matchDiv) {
+            matchDiv.querySelectorAll('.dnb-1-btn, .dnb-2-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
 
-@app.route('/matches')
-def get_matches():
-    sport = request.args.get('sport')
-    date = request.args.get('date')
-    matches = fetch_matches_from_sheets()
+                    if (button.classList.contains('dnb-1-btn')) {
+                        selectedOption = '1';
+                        selectedOdds = match.odds.dnb_1;
+                    } else if (button.classList.contains('dnb-2-btn')) {
+                        selectedOption = '2';
+                        selectedOdds = match.odds.dnb_2;
+                    }
 
-    # Filter by sport and date
-    if sport:
-        matches = [match for match in matches if match['sport'].lower() == sport.lower()]
-    if date:
-        matches = [match for match in matches if match['formatted_date'].startswith(date)]
+                    updateReturnDisplay();
+                });
+            });
+        }
 
-    return jsonify(matches)
+        // Function to attach event listeners for DC 1/12/X2 buttons
+        function attachDCListeners(matchDiv) {
+            matchDiv.querySelectorAll('.dc-1x-btn, .dc-12-btn, .dc-x2-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    matchDiv.querySelectorAll('.button-group button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    if (button.classList.contains('dc-1x-btn')) {
+                        selectedOption = '1x';
+                        selectedOdds = match.odds.dc_1x;
+                    } else if (button.classList.contains('dc-12-btn')) {
+                        selectedOption = '12';
+                        selectedOdds = match.odds.dc_12;
+
+                    } else if (button.classList.contains('dc-x2-btn')) {
+                        selectedOption = 'x2';
+                        selectedOdds = match.odds.dc_x2;
+                    }
+
+                    updateReturnDisplay();
+                });
+            });
+        }
 
 
-@app.route('/sports')
-def get_sports():
-    matches = fetch_matches_from_sheets()
-    sports = {match['sport'] for match in matches}
-    return jsonify(list(sports))
 
+            function updateReturnDisplay() {
+                const betAmount = parseFloat(betInput.value) || 0;
+                if (selectedOdds && betAmount > 0) {
+                    const expectedReturn = (betAmount * selectedOdds).toFixed(2);
+                    const membershipReturn = (betAmount * selectedOdds * 2).toFixed(2);
 
-@app.route('/dates')
-def get_dates():
-    sport = request.args.get('sport')
-    matches = fetch_matches_from_sheets()
+                    returnDisplay.textContent = `Expected Return: $${expectedReturn}`;
+                    membershipReturnDisplay.textContent = `Double-Club Membership Return: $${membershipReturn}`;
 
-    if sport:
-        matches = [match for match in matches if match['sport'].lower() == sport.lower()]
+                    membershipReturnDisplay.style.display = 'block';
+                    buyButton.style.display = 'inline-block';
+                } else {
+                    returnDisplay.textContent = 'Expected Return: $0';
+                    membershipReturnDisplay.style.display = 'block';
+                    buyButton.style.display = 'none';
+                }
+            }
+        }
 
-    dates = {match['formatted_date'].split(' - ')[0] for match in matches}
-    return jsonify(sorted(dates))
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    window.onload = () => {
+        fetchSports();
+        fetchMatches(); // Initially load all matches
+        document.getElementById('sport-filter').addEventListener('change', fetchMatches); // Update matches on filter change
+    };
+</script>
+</body>
+</html>
