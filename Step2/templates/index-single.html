@@ -26,6 +26,29 @@
     max-width: 400px; /* Optional: Set a max width to avoid excessive stretching */
 }
 
+
+/* Loading message styling */
+#loading-message {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%);
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 10px; /* Space below message */
+}
+
+@media (max-width: 600px) {
+    #loading-message {
+        font-size: 1.25rem;  /* Smaller font size on mobile */
+        line-height: normal;
+        letter-spacing: normal;
+        margin: auto;
+    }
+}
+
+
+
 /* Title styling */
 #title {
     font-size: 2.5rem;
@@ -500,7 +523,7 @@
             <option value="">Select Sport</option>
         </select>
 
-        <button id="accumulator-btn" class="accumulator-btn">Try Acumulator</button>
+        <button id="accumulator-btn" class="accumulator-btn">Try Acumulator Betting</button>
     </div>
 
     <div id="cart-icon" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -530,9 +553,8 @@
 </div>
 
 
-
 <div class="container">
-    <h1 class="section-title"></h1>
+    <div id="loading-message">Please wait while matches are being loaded...</div>
     <div id="matches-list"></div>
 </div>
 
@@ -715,38 +737,44 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     }
 
     async function fetchMatches() {
-        const sport = document.getElementById('sport-filter').value;
-        const url = sport ? `/matches?sport=${sport}` : '/matches';
+    const sport = document.getElementById('sport-filter').value;
+    const url = sport ? `/matches?sport=${sport}` : '/matches';
 
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Error fetching matches');
+    try {
+        // Show the loading message
+        document.getElementById('loading-message').style.display = 'block';
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Error fetching matches');
 
-            const matches = await response.json();
-            if (matches.length > 0) {
-                // Sort matches by date and time
-                matches.sort((a, b) => {
-                    const [dateA, timeA] = a.formatted_date.split(' - ');
-                    const [dateB, timeB] = b.formatted_date.split(' - ');
+        const matches = await response.json();
+        if (matches.length > 0) {
+            // Sort matches by date and time
+            matches.sort((a, b) => {
+                const [dateA, timeA] = a.formatted_date.split(' - ');
+                const [dateB, timeB] = b.formatted_date.split(' - ');
 
-                    const [dayA, monthA, yearA] = dateA.split('/');
-                    const [dayB, monthB, yearB] = dateB.split('/');
+                const [dayA, monthA, yearA] = dateA.split('/');
+                const [dayB, monthB, yearB] = dateB.split('/');
 
-                    // Format date into 'YYYY-MM-DD' for proper comparison
-                    const dateTimeA = new Date(`${yearA}-${monthA}-${dayA}T${timeA}`);
-                    const dateTimeB = new Date(`${yearB}-${monthB}-${dayB}T${timeB}`);
+                // Format date into 'YYYY-MM-DD' for proper comparison
+                const dateTimeA = new Date(`${yearA}-${monthA}-${dayA}T${timeA}`);
+                const dateTimeB = new Date(`${yearB}-${monthB}-${dayB}T${timeB}`);
 
-                    return dateTimeA - dateTimeB; // Ascending order (earliest first)
-                });
-                renderMatches(matches);
-            } else {
-                document.getElementById('matches-list').innerHTML = '<p>No matches available</p>';
-            }
-        } catch (error) {
-            console.error(error);
-            document.getElementById('matches-list').innerHTML = '<p>Failed to load matches. Please try again later.</p>';
+                return dateTimeA - dateTimeB; // Ascending order (earliest first)
+            });
+            renderMatches(matches);
+        } else {
+            document.getElementById('matches-list').innerHTML = '<p>No matches available</p>';
         }
+    } catch (error) {
+        console.error(error);
+        document.getElementById('matches-list').innerHTML = '<p>Failed to load matches. Please try again later.</p>';
+    } finally {
+        // Hide the loading message
+        document.getElementById('loading-message').style.display = 'none';
     }
+}
+
 
 
 function renderMatches(matches) {
