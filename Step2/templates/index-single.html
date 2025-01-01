@@ -7,28 +7,73 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
 
-        #title {
-  font-size: 2.5rem; /* Popping size */
-  font-weight: bold; /* Bold */
-  line-height: 1.375; /* Line spacing */
-  letter-spacing: 0; /* Letter spacing */
-  width: 100%; /* Full width */
-  margin: auto; /* Center the title */
-  text-align: center; /* Center align */
-  background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%); /* Gradient with specific angle and stops */
-  -webkit-background-clip: text; /* Clip the background gradient to the text */
-  color: transparent; /* Text color will be the gradient */
-  appearance: normal; /* Normal appearance */
+
+#accumulator-btn {
+    font-weight: 600;
+    cursor: pointer;
 }
 
-@media (max-width: 600px) {
-  #title {
-    font-size: 1.75rem; /* Smaller size for mobile */
-    line-height: normal; /* Auto line height for mobile */
-    letter-spacing: normal; /* Auto letter spacing */
-    margin: auto; /* Center on mobile */
-  }
+#accumulator-btn:hover, .sport-dropdown:hover {
+    background-color: #4F5660;
 }
+
+/* Filters container (to group dropdown and button next to each other) */
+.filters-container {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    gap: 10px; /* Space between dropdown and button */
+    width: 100%;
+    max-width: 400px; /* Optional: Set a max width to avoid excessive stretching */
+}
+
+/* Title styling */
+#title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%);
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 20px; /* Space below title */
+}
+
+    @media (max-width: 600px) {
+        #title {
+            font-size: 1.75rem;
+            line-height: normal;
+            letter-spacing: normal;
+            margin: auto;
+        }
+    }
+
+ /* Accumulator Button (Styled like other buttons) */
+    #accumulator-btn {
+        width: auto; /* Remove full width */
+        background-color: #3E4352;
+        color: #FFFFFF96;
+        border: 2px solid #3E4352;
+        border-radius: 6px;
+        padding: 12px 15px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+    }
+
+    #accumulator-btn:hover {
+        background-color: #4F5660;
+    }
+
+
+
+    /* New flex layout for the elements container */
+    .elements-container {
+        display: flex;
+        justify-content: space-between; /* Distribute the items with space between them */
+        align-items: center;
+        gap: 20px; /* Optional: add some gap between elements */
+        margin-top: 20px;
+    }
 
 
         /* Accumulator Button (Styled like other buttons) */
@@ -175,16 +220,17 @@
     }
 
 
-        .sport-dropdown {
-            padding: 10px;
-            font-size: 1rem;
-            background-color: #3E4352;
-            color: #FFFFFF96;
-            border: none;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            width: 100%;
-        }
+/* Styling for dropdown and button */
+.sport-dropdown, #accumulator-btn {
+    width: 100%; /* Full width */
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 6px;
+    background-color: #3E4352;
+    color: #FFFFFF96;
+    border: none;
+    transition: background-color 0.3s ease;
+}
 
 
 
@@ -259,12 +305,16 @@
             width: 100%;
         }
 
-        /* Container */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+/* Ensure container has flex column layout */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Space between title, select and button */
+    padding: 20px;
+}
+
 
         .section-title {
             text-align: center;
@@ -442,15 +492,24 @@
 </head>
 
 <body>
+<div class="container">
+    <h1 id="title">Upcoming Events</h1>
 
-<h1 id="title">Upcoming Events</h1>
+    <div class="filters-container">
+        <select id="sport-filter" class="sport-dropdown">
+            <option value="">Select Sport</option>
+        </select>
 
+        <button id="accumulator-btn" class="accumulator-btn">Try Acumulator</button>
+    </div>
 
-<select id="sport-filter" class="sport-dropdown">
-    <option value="">Select Sport</option>
-</select>
-
-<button id="accumulator-btn" class="accumulator-btn">Try Acumulator</button>
+    <div id="cart-icon" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <span style="color: #fff; font-size: 24px;">🛒</span>
+        <span id="cart-badge" style="position: absolute; top: -5px; right: -5px; background-color: #D9534F; color: white; border-radius: 50%; width: 20px; height: 20px; display: none; justify-content: center; align-items: center; font-size: 12px; font-weight: bold; text-align: center;">
+            0
+        </span>
+    </div>
+</div>
 
 <div id="cart-icon" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
     <span style="color: #fff; font-size: 24px;">🛒</span>
@@ -607,7 +666,7 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     }).join('\n');
 
     const checkoutMessage = {
-        content: `**New Bet Checkout**\n\n${betDetailsMessage}\n\nTotal: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`,
+        content: `**New Bet Checkout -Single bet only - **\n\n${betDetailsMessage}\n\nTotal: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`,
     };
 
     // Send the checkout details to the server via the /save_bet endpoint
