@@ -23,7 +23,7 @@
 .filters-container {
     display: flex;
     flex-direction: column; /* Stack items vertically */
-    gap: 10px; /* Space between dropdown and button */
+    gap: 4px; /* Space between dropdown and button */
     width: 100%;
     max-width: 400px; /* Optional: Set a max width to avoid excessive stretching */
 }
@@ -248,7 +248,7 @@
     }
 
 
-/* Styling for dropdown and button */
+* Styling for dropdown and button */
 .sport-dropdown, #accumulator-btn {
     width: 100%; /* Full width */
     padding: 10px;
@@ -258,12 +258,11 @@
     color: #FFFFFF96;
     border: none;
     transition: background-color 0.3s ease;
+    margin: 0; /* Remove default margin */
 }
 
-
-.sport-dropdown.show {
-    opacity: 1;
-    transform: translateY(0);
+#accumulator-btn {
+    margin-top: 5px; /* Add a small margin between the button and dropdown */
 }
 
 
@@ -367,6 +366,18 @@ body {
     align-items: center;
     gap: 20px;
     padding: 20px;
+
+}
+
+/* Ensure container has flex column layout */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+
 }
 
 .section-title {
