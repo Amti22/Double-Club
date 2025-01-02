@@ -5,23 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Betting Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
- <style>
+    <style>
+
 
 
 #accumulator-btn {
-    font-weight: 600;
-    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-#accumulator-btn:hover, .sport-dropdown:hover {
+#accumulator-btn:hover {
     background-color: #4F5660;
+    transform: translateY(-2px); /* Add a slight upward movement */
 }
+
 
 /* Filters container (to group dropdown and button next to each other) */
 .filters-container {
     display: flex;
     flex-direction: column; /* Stack items vertically */
-    gap: 10px; /* Space between dropdown and button */
+    gap: 4px; /* Space between dropdown and button */
     width: 100%;
     max-width: 400px; /* Optional: Set a max width to avoid excessive stretching */
 }
@@ -209,13 +211,16 @@
         z-index: 9999; /* Ensure it stays on top of all elements */
     }
 
-    #cart-icon.hidden {
-        visibility: hidden;
-    }
+#cart-icon.visible {
+    visibility: visible;
+    transform: scale(1.1); /* Slightly enlarge when visible */
+    transition: transform 0.3s ease;
+}
 
-    #cart-icon.visible {
-        visibility: visible;
-    }
+#cart-icon.hidden {
+    visibility: hidden;
+    transform: scale(0.9); /* Shrink when hidden */
+}
 
     /* Checkout Button */
     #cart-container button.checkout-btn {
@@ -243,7 +248,7 @@
     }
 
 
-/* Styling for dropdown and button */
+* Styling for dropdown and button */
 .sport-dropdown, #accumulator-btn {
     width: 100%; /* Full width */
     padding: 10px;
@@ -253,6 +258,11 @@
     color: #FFFFFF96;
     border: none;
     transition: background-color 0.3s ease;
+    margin: 0; /* Remove default margin */
+}
+
+#accumulator-btn {
+    margin-top: 5px; /* Add a small margin between the button and dropdown */
 }
 
 
@@ -277,56 +287,76 @@
             transition: all 0.3s ease;
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: transparent;
-            color: #FFFFFF96;
-            line-height: 1.6;
-        }
+:root {
+    --primary-black: #FFFFFF96;
+    --primary-white: #FFFFFF;
+    --secondary-gray: #FFFFFF96;
+    --accent-red: #E63946;
+    --accent-blue: #457B9D;
+    --background-gray: #F8F9FA;
+    --content-primary: #FFFFFF96;
+    --headline-primary: #FF7A7A;
+    --overline-primary: #9892E0;
+    --button-label: #FFFFFF96;
+}
 
-        /* Navigation */
-        .navbar {
-            position: sticky;
-            top: 0;
-            background-color: rgba(255,255,255,0.95);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
 
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            letter-spacing: -1px;
-        }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: transparent;
+    color: var(--content-primary);
+    line-height: 1.6;
+}
 
-        .navbar-links a {
-            text-decoration: none;
-            color: #FFFFFF96;
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-left: 20px;
-            font-size: 0.9rem;
-            position: relative;
-        }
+      /* Navigation */
+.navbar {
+    position: sticky;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
 
-        .navbar-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 0;
-            background-color: #FFFFFF96;
-            transition: width 0.3s;
-        }
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: -1px;
+}
 
-        .navbar-links a:hover::after {
-            width: 100%;
-        }
+.navbar-links a {
+    text-decoration: none;
+    color: var(--content-primary);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-left: 20px;
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.navbar-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--content-primary);
+    transition: width 0.3s;
+}
+
+.navbar-links a:hover::after {
+    width: 100%;
+}
 
 /* Ensure container has flex column layout */
 .container {
@@ -334,183 +364,207 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px; /* Space between title, select and button */
+    gap: 20px;
     padding: 20px;
+
+}
+
+/* Ensure container has flex column layout */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    letter-spacing: -1px;
+}
+
+.match-container {
+    background-color: #2F3340;
+    border: 1px solid #3E4352;
+      border-radius: 15px; /* Round corners for card-like effect */
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.match-container:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.match-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+.match-header-time {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+.match-header span {
+    font-size: 1.2rem;
+}
+
+.bet-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.bet-amount {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #3E4352;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.button-group .bts-yes-btn {
+    order: 1;
+}
+
+.button-group .bts-no-btn {
+    order: 3;
+}
+
+.button-group .bts-hidden-btn {
+    order: 2;
+    visibility: hidden;
+}
+
+.button-group .dnb-1-btn {
+    order: 1;
+}
+
+.button-group .dnb-2-btn {
+    order: 3;
+}
+
+.button-group button {
+    background-color: #3E4352;
+    color: var(--button-label);
+    border: 2px solid #3E4352;
+    border-radius: 6px;
+    padding: 12px 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.button-group button:hover {
+    background-color: var(--primary-black);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add shadow effect on hover */
 }
 
 
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 30px;
-            letter-spacing: -1px;
-        }
+.button-group button.active {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
 
-        /* Match Container */
-        .match-container {
-            background-color: #2F3340;
-            border: 1px solid #3E4352;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+.return-display {
+    text-align: right;
+    font-weight: 600;
+    color: var(--content-primary);
+    margin-top: 15px;
+}
 
-        .match-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-        }
+.membership-return {
+    text-align: right;
+    font-weight: 600;
+    color: var(--overline-primary);
+    margin-top: 15px;
+}
 
-        .match-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 600;
-        }
+.buy-button {
+    width: 100%;
+    background-color: #3E4352;
+    color: var(--button-label);
+    border: none;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
 
-        .match-header-time {
-            display: flex;
-            text-align: center;
-            justify-content: center;
-            align-items: center;
-            font-weight: 600;  /* This makes the text bold */
-        }
+.buy-button:hover {
+    background-color: var(--accent-red);
+}
 
+.footer {
+    background-color: var(--primary-black);
+    color: var(--content-primary);
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
 
-        .match-header span {
-            font-size: 1.2rem;
-        }
+.footer p {
+    font-size: 0.8rem;
+    color: #CCCCCC;
+}
 
+@media (max-width: 600px) {
 
+     #title {
+        font-size: 1.5rem;
+    }
 
-        .bet-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+     #loading-message {
+        font-size: 1.2rem;
+    }
 
-        .bet-amount {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #3E4352;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            align-items: center;
-            justify-content: space-between;
-
-
-        }
-
-        .button-group .bts-yes-btn {
-            order: 1; /* Ensure "No" stays on the right */
-        }
-        .button-group .bts-no-btn {
-            order: 3; /* Ensure "No" stays on the right */
-        }
-
-        .button-group .bts-hidden-btn {
-            order: 2; /* Ensure "No" stays on the right */
-            visibility: hidden;
-        }
-
-        .button-group .dnb-1-btn {
-            order: 1; /* Ensure "1" stays on the right */
-        }
-        .button-group .dnb-2-btn {
-            order: 3; /* Ensure "2" stays on the right */
-        }
+    .navbar-links a {
+        font-size: 0.8rem;
+    }
 
 
 
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+    }
 
-        .button-group button {
-            background-color: #3E4352;
-            color: var(--Button-label);
-            border: 2px solid #3E4352;
-            border-radius: 6px;
-            padding: 12px 15px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
+    .navbar-links {
+        margin-top: 10px;
+    }
 
-        .button-group button:hover {
-            background-color: var(--primary-black);
-            color: var(--Button-label);
-        }
+    .button-group {
+        grid-template-columns: 1fr;
+    }
 
-        .button-group button.active {
-            background-color: var(--accent-blue);
-            border-color: var(--accent-blue);
-            color: var(--Button-label);
-        }
+    .section-title {
+        font-size: 1.5rem;
+    }
 
-        .return-display {
-            text-align: right;  /* Keep expected return on the right */
-            font-weight: 600;
-            color: #FFFFFF96;
-            margin-top: 15px;
-            display: block;  /* Ensure it's displayed */
-        }
-
-        .membership-return {
-            text-align: right;  /* Align to the right side */
-            font-weight: 600;
-            color: var(--Overline);
-            margin-top: 15px;
-            display: block;  /* Make sure it's always visible */
-        }
-
-        .buy-button {
-            width: 100%;
-            background-color: #3E4352;
-            color: var(--Button-label);
-            border: none;
-            border-radius: 6px;
-            padding: 15px;
-            margin-top: 15px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .buy-button:hover {
-            background-color: var(--accent-red);
-        }
-
-        /* Footer */
-        .footer {
-            background-color: var(--primary-black);
-            color: #FFFFFF96;
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-        }
-
-        .footer p {
-            font-size: 0.8rem;
-            color: #CCCCCC;
-        }
-
-        @media (max-width: 600px) {
-            .navbar {
-                flex-direction: column;
-                align-items: center;
-            }
-            .navbar-links {
-                margin-top: 10px;
-            }
-            .button-group {
-                grid-template-columns: 1fr;
-            }
-        }
+    .match-header span {
+        font-size: 1rem;
+    }
+}
     </style>
 
 </head>
@@ -524,8 +578,10 @@
         <select id="sport-filter" class="sport-dropdown">
             <option value="">Select Sport</option>
         </select>
-
-        <button id="accumulator-btn" class="accumulator-btn">Try Single Betting</button>
+        <select id="date-filter" class="date-dropdown">
+        <!-- Date options will be populated dynamically -->
+        </select>
+        <button id="accumulator-btn" class="accumulator-btn">Try Acumulator Betting</button>
     </div>
 
 <div id="cart-icon" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -536,24 +592,14 @@
     </span>
 </div>
 
-
-
 <!-- Cart Container (Initially Hidden) -->
 <div id="cart-container" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border: 1px solid #3E4352; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: none; width: 300px;">
     <h3 style="color: #FFFFFF96; font-weight: 700;">Your Cart</h3>
     <ul id="cart-list" style="list-style-type: none; padding-left: 0; color: #FFFFFF96;"></ul>
-    <div style="margin-top: 10px;">
-        <label for="bet-amount" style="color: #FFFFFF96; font-size: 0.9rem;">Bet Amount:</label>
-        <input id="bet-amount" type="number" min="0" step="0.01" value="1" style="margin-left: 10px; width: 80px; border-radius: 4px; border: 1px solid #3E4352; padding: 4px;">
-    </div>
-    <div id="total-odds" style="color: #FFFFFF96; margin-top: 10px;">Total Odds: 1.00</div>
-    <div id="potential-return" style="color: #FFFFFF96; margin-top: 10px;">Potential Return: $0.00</div>
-    <div id="membership-return" class="membership-return" style="text-align: right; font-weight: 600; color: var(--Overline); margin-top: 15px; display: block;">Membership Return: $0.00</div>
+    <div id="total-amount" style="color: #FFFFFF96; margin-top: 10px;">Total: $0.00 (approx. £0.00 GBP)</div>
     <button id="checkout-btn" style="background-color: #3E4352; color: #FFFFFF96; border: 2px solid #3E4352; border-radius: 6px; padding: 12px 15px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 10px;">Checkout</button>
     <button id="minimize-btn" style="background-color: #D9534F; color: white; border: none; border-radius: 6px; cursor: pointer; padding: 4px 8px; font-size: 0.8rem; margin-top: 10px;">Minimize</button>
 </div>
-
-
 
 
 <div class="container">
@@ -564,43 +610,39 @@
 <script>
 
  document.getElementById('accumulator-btn').addEventListener('click', function() {
-    window.location.href = '/single'; // Redirect to the /single route
+    window.location.href = '/acumulator'; // Redirect to the /acumulator route
   });
 
-    let cartItems = []; // Array to store individual bets
+
+let cartItems = []; // Array to store the individual bets in the cart
+
 // Function to update the cart with a new bet
 function updateCart(betDetails) {
     const cartContainer = document.getElementById('cart-container');
     const cartList = document.getElementById('cart-list');
-    const cartBadge = document.getElementById('cart-badge'); // Get the notification badge element
+    const cartBadge = document.getElementById('cart-badge');  // Get the notification badge element
 
     // Create a new list item for the bet placed
     const listItem = document.createElement('li');
-    listItem.style.marginBottom = '10px';
+    listItem.textContent = `${betDetails.match} - ${betDetails.selectedOption} odds ${betDetails.selectedOdds} - $${betDetails.betAmountUSD}`;
 
-    // Add bet details text
-    const betText = document.createElement('span');
-    betText.textContent = `${betDetails.match} - ${betDetails.selectedOption} odds ${betDetails.selectedOdds}`;
-    listItem.appendChild(betText);
-
-    // Create the remove button for this bet
+    // Create a "Remove" button for the bet
     const removeButton = document.createElement('button');
     removeButton.textContent = 'Remove';
+    removeButton.style.marginLeft = '10px';
     removeButton.style.backgroundColor = '#D9534F';
     removeButton.style.color = 'white';
     removeButton.style.border = 'none';
     removeButton.style.borderRadius = '6px';
     removeButton.style.cursor = 'pointer';
     removeButton.style.padding = '4px 8px';
-    removeButton.style.fontSize = '0.8rem';
-    removeButton.style.marginLeft = '10px';
 
-    // Add event listener to remove the bet when the remove button is clicked
+    // Add event listener to remove the bet from the cart
     removeButton.addEventListener('click', () => {
         removeBet(listItem, betDetails);
     });
 
-    // Append the remove button to the list item
+    // Add the remove button to the list item
     listItem.appendChild(removeButton);
 
     // Add the new bet to the cart
@@ -609,71 +651,39 @@ function updateCart(betDetails) {
     // Add the bet to the cartItems array
     cartItems.push(betDetails);
 
-    // Recalculate total odds when a new bet is added
-    totalOdds = cartItems.reduce((acc, bet) => acc * bet.selectedOdds, 1); // Reset total odds based on all bets
+    // Update the total amount live
+    updateTotalAmount();
 
-    // Update the UI
-    updateCartUI();
-
-    // Update the cart badge to reflect the number of items in the cart
-    cartBadge.textContent = cartItems.length; // Set badge count to the number of items
-    cartBadge.style.display = 'inline-block'; // Show the badge
+    // Update the cart items count and show the notification badge
+    cartBadge.textContent = cartItems.length;
+    cartBadge.style.display = 'flex';  // Make the notification badge visible
 }
 
 // Function to remove a bet from the cart
 function removeBet(listItem, betDetails) {
+    const cartBadge = document.getElementById('cart-badge');  // Get the notification badge element
+
     // Remove the bet from the cartItems array
     cartItems = cartItems.filter(item => item !== betDetails);
-
-    // Recalculate total odds after removing the bet
-    totalOdds = cartItems.reduce((acc, bet) => acc * bet.selectedOdds, 1); // Recalculate total odds
 
     // Remove the list item from the DOM
     listItem.remove();
 
-    // Update the UI
-    updateCartUI();
+    // Update the total amount live after removal
+    updateTotalAmount();
 
-    // Update the cart badge to reflect the number of items left
-    const cartBadge = document.getElementById('cart-badge');
-    cartBadge.textContent = cartItems.length; // Update badge count
+    // Update the cart items count
+    cartBadge.textContent = cartItems.length;
+
+    // If no items are left in the cart, hide the notification badge
     if (cartItems.length === 0) {
-        cartBadge.style.display = 'none'; // Hide the badge if no items are left
+        cartBadge.style.display = 'none';
     }
 }
-
-// Function to update the cart UI
-function updateCartUI() {
-    const totalOddsDisplay = document.getElementById('total-odds');
-    const potentialReturnDisplay = document.getElementById('potential-return');
-    const membershipReturnDisplay = document.getElementById('membership-return');
-    const wagerAmount = parseFloat(document.getElementById('bet-amount').value) || 0;
-
-    // If no items in cart, set total odds to 1
-    if (cartItems.length === 0) {
-        totalOdds = 0;  // Set total odds to 1 when there are no items in the cart
-    }
-
-    // Update the total odds display
-    totalOddsDisplay.textContent = `Total Odds: ${totalOdds.toFixed(2)}`;
-
-    // Calculate the potential return (if total odds is 0, return should also be 0)
-    const returnAmount = wagerAmount * totalOdds;
-    potentialReturnDisplay.textContent = `Potential Return: $${returnAmount.toFixed(2)}`;
-
-    // Calculate the membership return (double the potential return)
-    const membershipReturnAmount = returnAmount * 2;
-    membershipReturnDisplay.textContent = `Membership Return: $${membershipReturnAmount.toFixed(2)}`;
-}
-
-// Function to handle bet amount input change and update potential return
-document.getElementById('bet-amount').addEventListener('input', function() {
-    updateCartUI(); // Update UI when bet amount changes
-});
 
 // Function to update the total amount after every change
 function updateTotalAmount() {
-    const totalAmountUSD = cartItems.reduce((total, bet) => total + (bet.betAmountUSD || 0), 0);
+    const totalAmountUSD = cartItems.reduce((total, bet) => total + bet.betAmountUSD, 0);
     const totalAmountGBP = (totalAmountUSD * 0.80).toFixed(2); // Convert to GBP if necessary
 
     // Update the total amount display dynamically
@@ -710,25 +720,24 @@ document.getElementById('minimize-btn').addEventListener('click', () => {
     cartIcon.classList.add('visible');
 });
 
-// Handle the checkout button click (only one definition)
+// Handle the checkout button click
 document.getElementById('checkout-btn').addEventListener('click', () => {
     if (cartItems.length === 0) {
         console.log('Your cart is empty. Please add items before checking out.');
         return;
     }
 
-    // Calculate the total bet amount and potential return
-    const wagerAmount = parseFloat(document.getElementById('bet-amount').value) || 0;
-    const potentialReturn = wagerAmount * totalOdds;
-    const totalAmountGBP = (wagerAmount * 0.80).toFixed(2); // Convert to GBP if necessary
+    // Calculate the total bet amount
+    const totalAmountUSD = cartItems.reduce((total, bet) => total + bet.betAmountUSD, 0);
+    const totalAmountGBP = (totalAmountUSD * 0.80).toFixed(2); // Convert to GBP if necessary
 
     // Prepare the checkout details message
     const betDetailsMessage = cartItems.map(bet => {
-        return `${bet.match} - ${bet.selectedOption} odds ${bet.selectedOdds}`;
+        return `${bet.match} - ${bet.selectedOption} odds ${bet.selectedOdds} - $${bet.betAmountUSD}`;
     }).join('\n');
 
     const checkoutMessage = {
-        content: `**New Bet Checkout - acumulator - **\n\n${betDetailsMessage}\n\nWager Amount: $${wagerAmount.toFixed(2)}\nPotential Return: $${potentialReturn.toFixed(2)}\n(approx. £${totalAmountGBP} GBP)`,
+        content: `**New Bet Checkout -Single bet only - **\n\n${betDetailsMessage}\n\nTotal: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`,
     };
 
     // Send the checkout details to the server via the /save_bet endpoint
@@ -756,7 +765,6 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
 
 
 
-
     async function fetchSports() {
         try {
             const response = await fetch('/sports');
@@ -779,7 +787,8 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
 
     async function fetchMatches() {
     const sport = document.getElementById('sport-filter').value;
-    const url = sport ? `/matches?sport=${sport}` : '/matches';
+    const date = document.getElementById('date-filter').value;
+    const url = sport ? `/matches?sport=${sport}&date=${date}` : `/matches?date=${date}`;
 
     try {
         // Show the loading message
@@ -813,6 +822,51 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     } finally {
         // Hide the loading message
         document.getElementById('loading-message').style.display = 'none';
+    }
+}
+
+// Function to populate the date filter dropdown
+function populateDateFilter(matches) {
+    const dateFilter = document.getElementById('date-filter');
+
+    // Get all unique dates from the matches
+    const dates = [...new Set(matches.map(match => match.formatted_date.split(' - ')[0]))];
+
+    // Sort dates in ascending order
+    dates.sort((a, b) => {
+        const [dayA, monthA, yearA] = a.split('/');
+        const [dayB, monthB, yearB] = b.split('/');
+        const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
+        const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
+        return dateA - dateB;
+    });
+
+    // Add an option for each unique date
+    dates.forEach(date => {
+        const option = document.createElement('option');
+        option.value = date;
+        option.textContent = date;
+        dateFilter.appendChild(option);
+    });
+
+    // Set today's date as the default value
+    const today = new Date().toISOString().split('T')[0];
+    dateFilter.value = today;
+}
+
+// Call this function after fetching the matches
+async function fetchAndRenderMatches() {
+    try {
+        const response = await fetch('/matches');
+        const matches = await response.json();
+
+        // Populate the date filter dropdown
+        populateDateFilter(matches);
+
+        // Filter and render matches for the selected date
+        fetchMatches();
+    } catch (error) {
+        console.error('Error fetching matches:', error);
     }
 }
 
@@ -850,7 +904,7 @@ function renderMatches(matches) {
                     ${homeOdds ? `${match.formatted_date}` : ''}
                 </div>
                 <div class="bet-container">
-                    <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1" value="1" style="display: none;">
+                    <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1">
                     <div class="button-group">
                         ${homeOdds ? `<button class="home-btn">Home: ${match.odds.home_odds}</button>` : ''}
                         ${drawOdds ? `<button class="draw-btn">Draw: ${match.odds.draw_odds}</button>` : ''}
@@ -864,9 +918,8 @@ function renderMatches(matches) {
                         <option value="DC">Double Chance</option>
                     </select>
                 </div>
-                <div class="return-display" style="display: none;">Expected Return: $0</div>
-                <div class="membership-return" style="display: none;">Double-Club Membership Return: $0</div>
-
+                <div class="return-display">Expected Return: $0</div>
+                <div class="membership-return">Double-Club Membership Return: $0</div>
                 <button class="buy-button" style="display: none;">Place Bet</button>
             `;
 
@@ -1183,22 +1236,23 @@ buyButton.addEventListener('click', () => {
                     returnDisplay.textContent = `Expected Return: $${expectedReturn}`;
                     membershipReturnDisplay.textContent = `Double-Club Membership Return: $${membershipReturn}`;
 
-
-                    membershipReturnDisplay.style.display = 'none';
+                    membershipReturnDisplay.style.display = 'block';
                     buyButton.style.display = 'inline-block';
                 } else {
                     returnDisplay.textContent = 'Expected Return: $0';
-                    membershipReturnDisplay.style.display = 'none';
+                    membershipReturnDisplay.style.display = 'block';
                     buyButton.style.display = 'none';
                 }
             }
         }
 
-    window.onload = () => {
-        fetchSports();
-        fetchMatches(); // Initially load all matches
-        document.getElementById('sport-filter').addEventListener('change', fetchMatches); // Update matches on filter change
-    };
+// On page load, fetch sports, matches, and populate the date filter
+window.onload = () => {
+    fetchSports();
+    fetchAndRenderMatches(); // Initially load all matches and populate the date filter
+    document.getElementById('sport-filter').addEventListener('change', fetchMatches); // Update matches on filter change
+    document.getElementById('date-filter').addEventListener('change', fetchMatches); // Update matches on date change
+};
 </script>
 </body>
 </html>
