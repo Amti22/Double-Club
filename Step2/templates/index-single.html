@@ -578,7 +578,9 @@ body {
         <select id="sport-filter" class="sport-dropdown">
             <option value="">Select Sport</option>
         </select>
-
+        <select id="date-filter" class="date-dropdown">
+        <!-- Date options will be populated dynamically -->
+        </select>
         <button id="accumulator-btn" class="accumulator-btn">Try Acumulator Betting</button>
     </div>
 
@@ -785,7 +787,8 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
 
     async function fetchMatches() {
     const sport = document.getElementById('sport-filter').value;
-    const url = sport ? `/matches?sport=${sport}` : '/matches';
+    const date = document.getElementById('date-filter').value;
+    const url = sport ? `/matches?sport=${sport}&date=${date}` : `/matches?date=${date}`;
 
     try {
         // Show the loading message
@@ -822,6 +825,50 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     }
 }
 
+// Function to populate the date filter dropdown
+function populateDateFilter(matches) {
+    const dateFilter = document.getElementById('date-filter');
+
+    // Get all unique dates from the matches
+    const dates = [...new Set(matches.map(match => match.formatted_date.split(' - ')[0]))];
+
+    // Sort dates in ascending order
+    dates.sort((a, b) => {
+        const [dayA, monthA, yearA] = a.split('/');
+        const [dayB, monthB, yearB] = b.split('/');
+        const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
+        const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
+        return dateA - dateB;
+    });
+
+    // Add an option for each unique date
+    dates.forEach(date => {
+        const option = document.createElement('option');
+        option.value = date;
+        option.textContent = date;
+        dateFilter.appendChild(option);
+    });
+
+    // Set today's date as the default value
+    const today = new Date().toISOString().split('T')[0];
+    dateFilter.value = today;
+}
+
+// Call this function after fetching the matches
+async function fetchAndRenderMatches() {
+    try {
+        const response = await fetch('/matches');
+        const matches = await response.json();
+
+        // Populate the date filter dropdown
+        populateDateFilter(matches);
+
+        // Filter and render matches for the selected date
+        fetchMatches();
+    } catch (error) {
+        console.error('Error fetching matches:', error);
+    }
+}
 
 
 function renderMatches(matches) {
@@ -1199,11 +1246,13 @@ buyButton.addEventListener('click', () => {
             }
         }
 
-    window.onload = () => {
-        fetchSports();
-        fetchMatches(); // Initially load all matches
-        document.getElementById('sport-filter').addEventListener('change', fetchMatches); // Update matches on filter change
-    };
+// On page load, fetch sports, matches, and populate the date filter
+window.onload = () => {
+    fetchSports();
+    fetchAndRenderMatches(); // Initially load all matches and populate the date filter
+    document.getElementById('sport-filter').addEventListener('change', fetchMatches); // Update matches on filter change
+    document.getElementById('date-filter').addEventListener('change', fetchMatches); // Update matches on date change
+};
 </script>
 </body>
 </html>
