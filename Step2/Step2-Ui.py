@@ -131,6 +131,8 @@ def fetch_matches_from_sheets():
                 continue
 
             match_data = {
+                'date': row[1], # Date ex : 2024-12-22
+                'time': row[2], # Time ex : 16:00:00
                 'home_team': row[4],  # Adjust indices based on your sheet structure
                 'away_team': row[5],
                 'sport': row[6],
