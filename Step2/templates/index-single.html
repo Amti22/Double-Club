@@ -3,10 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Betting Platform</title>
+    <title>Double-Club.com</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+/* Loading dots styling */
+.loading-message {
+    font-size: 32px; /* Larger size */
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: transparent; /* So the background-clip can apply */
+    background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%);
+    -webkit-background-clip: text;
+    margin-top: 20px;
+    height: 100px; /* Ensure it's centered vertically */
+}
 
+.dot {
+    animation: blink 1.5s infinite;
+}
+
+.dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
 
 
 #accumulator-btn {
@@ -29,27 +67,6 @@
     margin-left: auto; /* Center horizontally */
     margin-right: auto; /* Center horizontally */
 }
-
-/* Loading message styling */
-#loading-message {
-    font-size: 1.5rem;
-    font-weight: normal; /* Changed to normal to remove boldness */
-    text-align: center;
-    color: var(--content-primary); /* Use the primary content color */
-    margin-bottom: 10px; /* Space below message */
-}
-
-@media (max-width: 600px) {
-    #loading-message {
-        font-size: 1.25rem;  /* Smaller font size on mobile */
-        line-height: normal;
-        letter-spacing: normal;
-        margin: auto;
-    }
-}
-
-
-
 
 
 /* Title styling */
@@ -576,7 +593,7 @@ body {
 <body>
 
 <div class="container">
-    <h1 id="title">Upcoming Events</h1>
+    <h1 id="title">Loading Matches...</h1>
 
     <div class="filters-container">
         <select id="sport-filter" class="sport-dropdown">
@@ -607,7 +624,9 @@ body {
 
 
 <div class="container">
-    <div id="loading-message">Please wait while matches are being loaded...</div>
+    <div id="loading-message" class="loading-message">
+        <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+    </div>
     <div id="matches-list"></div>
 </div>
 
@@ -796,8 +815,12 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     const url = sport ? `/matches?sport=${sport}&date=${date}` : `/matches?date=${date}`;
 
     try {
+        // Change the title to "Please Wait"
+        document.getElementById('title').innerText = 'Please Wait...';
+
         // Show the loading message
-        document.getElementById('loading-message').style.display = 'block';
+        document.getElementById('loading-message').style.display = 'inline-block';
+
         const response = await fetch(url);
         if (!response.ok) throw new Error('Error fetching matches');
 
@@ -825,10 +848,12 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
         console.error(error);
         document.getElementById('matches-list').innerHTML = '<p>Failed to load matches. Please try again later.</p>';
     } finally {
-        // Hide the loading message
+        // Hide the loading message and reset the title back to "Upcoming Events"
         document.getElementById('loading-message').style.display = 'none';
+        document.getElementById('title').innerText = 'Upcoming Events';
     }
 }
+
 function populateDateFilter(matches) {
     const dateFilter = document.getElementById('date-filter');
 
