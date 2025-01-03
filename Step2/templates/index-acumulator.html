@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Betting Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-   <style>
+    <style>
 /* Loading dots styling */
 .loading-message {
     font-size: 32px; /* Larger size */
@@ -392,7 +392,20 @@ body {
 
 
 
+/* Date and Time styling */
+.match-date-time {
+    position: absolute;
+    top: 10px;    /* Position from the top */
+    right: 10px;  /* Position from the right */
+    font-size: 0.8rem;  /* Smaller font size */
+    font-weight: normal;
+    color: #333;  /* Choose your desired color */
+    text-align: right;
+}
 
+.match-date-time span {
+    display: block; /* Stack date and time vertically */
+}
 
 .section-title {
     text-align: center;
@@ -410,11 +423,11 @@ body {
     margin-bottom: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 100%; /* Take full width of container */
+    width: 100%; /* Full width of container */
     max-width: 600px; /* Match the max-width of the dropdowns */
     margin-left: auto; /* Center horizontally */
     margin-right: auto; /* Center horizontally */
-
+    position: relative; /* This allows positioning of elements inside */
 }
 
 .match-container:hover {
@@ -430,16 +443,19 @@ body {
 
 }
 
-.match-header-time {
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    font-weight: 600;
+/* Styling for date and time in the top-right corner */
+.match-date-time {
+    position: absolute;  /* Position relative to the .match-container */
+    top: 10px;  /* Distance from the top */
+    right: 10px; /* Distance from the right */
+    font-size: 0.8rem; /* Smaller font size */
+    font-weight: 500;
+    color: var(--content-primary);
+    text-align: right; /* Align text to the right */
 }
 
-.match-header span {
-    font-size: 1.2rem;
+.match-date-time span {
+    display: block; /* Stack date and time vertically */
 }
 
 .bet-container {
@@ -624,7 +640,7 @@ body {
         <input id="bet-amount" type="number" min="0" step="0.01" value="1" style="margin-left: 10px; width: 80px; border-radius: 4px; border: 1px solid #3E4352; padding: 4px;">
     <div id="total-odds" style="color: #FFFFFF96; margin-top: 10px;">Total Odds: 1.00</div>
     <div id="potential-return">Potential Return: $0.00</div>
-    <div id="membership-return" class="membership-return">Membership Return: $0.00</div>
+    <div id="membership-return">Membership Return: $0.00</div>
     <button id="checkout-btn">Checkout</button>
     <button id="minimize-btn">Minimize</button>
 </div>
@@ -980,11 +996,6 @@ function renderMatches(matches) {
                     <div class="match-header">
                     <span>${match.away_team}</span>
                 </div>
-
-                <div class="odds-display" style="text-align: center;">
-                    <strong></strong>
-                    ${homeOdds ? `${match.formatted_date}` : ''}
-                </div>
                 <div class="bet-container">
                      <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1" value="1" style="display: none;">
                     <div class="button-group">
@@ -1006,8 +1017,18 @@ function renderMatches(matches) {
                 <button class="buy-button" style="display: none;">Place Bet</button>
             `;
 
+            // Add match date and time to the top right of the container
+            const dateTimeDiv = document.createElement('div');
+            dateTimeDiv.classList.add('match-date-time');
+            dateTimeDiv.innerHTML = `
+                <span>${match.date}</span> <!-- Date -->
+                <span>${match.time}</span> <!-- Time -->
+            `;
+            matchDiv.appendChild(dateTimeDiv);
+
             matchesList.appendChild(matchDiv);
             attachListeners(matchDiv, match);
+
         }
     });
 }
