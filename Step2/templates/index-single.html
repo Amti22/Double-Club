@@ -656,7 +656,6 @@ body {
  document.getElementById('accumulator-btn').addEventListener('click', function() {
     window.location.href = '/acumulator'; // Redirect to the /acumulator route
   });
-
 let cartItems = []; // Array to store the individual bets in the cart
 
 // Function to update the cart with a new bet
@@ -694,15 +693,31 @@ function removeBet(betDetails) {
 
 // Function to recalculate which bets have doubled odds
 function recalculateOdds() {
+    // Group bets by amount
+    const groupedByAmount = {};
+
+    // Group bets by their betAmountUSD
     cartItems.forEach((bet, index) => {
-        // Every 3rd bet gets doubled odds
-        if ((index + 1) % 3 === 0) {
-            bet.selectedOdds = bet.originalOdds * 2; // Double the odds
-            bet.isOddsDoubled = true;
-        } else {
-            bet.selectedOdds = bet.originalOdds; // Reset to original odds
-            bet.isOddsDoubled = false;
+        const amount = bet.betAmountUSD;
+
+        if (!groupedByAmount[amount]) {
+            groupedByAmount[amount] = [];
         }
+        groupedByAmount[amount].push(index);
+    });
+
+    // Reset all odds to original and then double every third bet in each group
+    Object.values(groupedByAmount).forEach(indices => {
+        indices.forEach((index, i) => {
+            const bet = cartItems[index];
+            if ((i + 1) % 3 === 0) {
+                bet.selectedOdds = bet.originalOdds * 2; // Double the odds
+                bet.isOddsDoubled = true;
+            } else {
+                bet.selectedOdds = bet.originalOdds; // Reset to original odds
+                bet.isOddsDoubled = false;
+            }
+        });
     });
 }
 
@@ -720,11 +735,20 @@ function renderCart() {
 
         if (bet.isOddsDoubled) {
             // Display old odds as strikethrough and show the new odds
-            listItem.innerHTML = `
-                ${bet.match} - ${bet.selectedBetOption} - ${bet.selectedOption} -
-                OLD ODDS: <span style="text-decoration: line-through; color: gray;">${bet.originalOdds.toFixed(2)}</span>,
-                NEW ODDS: ${bet.selectedOdds.toFixed(2)} - AMOUNT: $${bet.betAmountUSD} (DOUBLED ODDS)
-            `.toUpperCase();
+listItem.innerHTML = `
+    <span style="
+        background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%);
+        -webkit-background-clip: text;
+        color: transparent;
+    ">
+        ${bet.match} - ${bet.selectedBetOption} - ${bet.selectedOption} -
+        OLD ODDS: <span style="text-decoration: line-through; color: transparent;">${bet.originalOdds.toFixed(2)}</span>,
+        NEW ODDS: ${bet.selectedOdds.toFixed(2)} -
+        AMOUNT: $${bet.betAmountUSD} (DOUBLED)
+    </span>
+`.toUpperCase();
+
+
             listItem.style.color = '#28a745'; // Highlight doubled odds in green
             listItem.style.fontWeight = 'bold';
         } else {
@@ -772,6 +796,7 @@ function updateTotalAmount() {
     // Update the total amount display dynamically
     document.getElementById('total-amount').textContent = `Total: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`;
 }
+
 
 // Handle the checkout button click
 document.getElementById('checkout-btn').addEventListener('click', () => {
