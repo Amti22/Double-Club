@@ -657,73 +657,111 @@ body {
     window.location.href = '/acumulator'; // Redirect to the /acumulator route
   });
 
-
 let cartItems = []; // Array to store the individual bets in the cart
 
 // Function to update the cart with a new bet
 function updateCart(betDetails) {
-    const cartContainer = document.getElementById('cart-container');
     const cartList = document.getElementById('cart-list');
-    const cartBadge = document.getElementById('cart-badge');  // Get the notification badge element
+    const cartBadge = document.getElementById('cart-badge'); // Get the notification badge element
 
-    // Create a new list item for the bet placed
-    const listItem = document.createElement('li');
-    listItem.textContent = `${betDetails.match} - ${betDetails.selectedBetOption} - ${betDetails.selectedOption} - ODDS: ${betDetails.selectedOdds} - AMOUNT: $${betDetails.betAmountUSD}`.toUpperCase();
-
-    // Create a "Remove" button for the bet
-const removeButton = document.createElement('button');
-removeButton.textContent = 'Remove';
-removeButton.style.marginLeft = '5px'; // Adjust spacing
-removeButton.style.backgroundColor = '#D9534F';
-removeButton.style.color = 'white';
-removeButton.style.border = 'none';
-removeButton.style.borderRadius = '4px'; // Slightly smaller radius
-removeButton.style.cursor = 'pointer';
-removeButton.style.padding = '2px 6px'; // Smaller padding
-removeButton.style.fontSize = '0.8rem'; // Smaller font size
-
-    // Add event listener to remove the bet from the cart
-    removeButton.addEventListener('click', () => {
-        removeBet(listItem, betDetails);
-    });
-
-    // Add the remove button to the list item
-    listItem.appendChild(removeButton);
-
-    // Add the new bet to the cart
-    cartList.appendChild(listItem);
+    // Ensure selectedOdds is a number
+    betDetails.selectedOdds = parseFloat(betDetails.selectedOdds);
+    betDetails.originalOdds = betDetails.selectedOdds; // Save the original odds
 
     // Add the bet to the cartItems array
     cartItems.push(betDetails);
 
-    // Update the total amount live
-    updateTotalAmount();
+    // Recalculate which bets have doubled odds
+    recalculateOdds();
 
-    // Update the cart items count and show the notification badge
-    cartBadge.textContent = cartItems.length;
-    cartBadge.style.display = 'flex';  // Make the notification badge visible
+    // Refresh the cart display
+    renderCart();
 }
 
 // Function to remove a bet from the cart
-function removeBet(listItem, betDetails) {
-    const cartBadge = document.getElementById('cart-badge');  // Get the notification badge element
+function removeBet(betDetails) {
+    const cartBadge = document.getElementById('cart-badge'); // Get the notification badge element
 
     // Remove the bet from the cartItems array
     cartItems = cartItems.filter(item => item !== betDetails);
 
-    // Remove the list item from the DOM
-    listItem.remove();
+    // Recalculate which bets have doubled odds
+    recalculateOdds();
 
-    // Update the total amount live after removal
-    updateTotalAmount();
+    // Refresh the cart display
+    renderCart();
+}
 
-    // Update the cart items count
+// Function to recalculate which bets have doubled odds
+function recalculateOdds() {
+    cartItems.forEach((bet, index) => {
+        // Every 3rd bet gets doubled odds
+        if ((index + 1) % 3 === 0) {
+            bet.selectedOdds = bet.originalOdds * 2; // Double the odds
+            bet.isOddsDoubled = true;
+        } else {
+            bet.selectedOdds = bet.originalOdds; // Reset to original odds
+            bet.isOddsDoubled = false;
+        }
+    });
+}
+
+// Function to render the cart items in the UI
+function renderCart() {
+    const cartList = document.getElementById('cart-list');
+    const cartBadge = document.getElementById('cart-badge'); // Get the notification badge element
+
+    // Clear the current cart display
+    cartList.innerHTML = '';
+
+    // Add all cart items back to the UI
+    cartItems.forEach(bet => {
+        const listItem = document.createElement('li');
+
+        if (bet.isOddsDoubled) {
+            // Display old odds as strikethrough and show the new odds
+            listItem.innerHTML = `
+                ${bet.match} - ${bet.selectedBetOption} - ${bet.selectedOption} -
+                OLD ODDS: <span style="text-decoration: line-through; color: gray;">${bet.originalOdds.toFixed(2)}</span>,
+                NEW ODDS: ${bet.selectedOdds.toFixed(2)} - AMOUNT: $${bet.betAmountUSD} (DOUBLED ODDS)
+            `.toUpperCase();
+            listItem.style.color = '#28a745'; // Highlight doubled odds in green
+            listItem.style.fontWeight = 'bold';
+        } else {
+            // Display normal odds
+            listItem.textContent = `${bet.match} - ${bet.selectedBetOption} - ${bet.selectedOption} - ODDS: ${bet.selectedOdds.toFixed(2)} - AMOUNT: $${bet.betAmountUSD}`.toUpperCase();
+        }
+
+        // Create a "Remove" button for the bet
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.style.marginLeft = '5px'; // Adjust spacing
+        removeButton.style.backgroundColor = '#D9534F';
+        removeButton.style.color = 'white';
+        removeButton.style.border = 'none';
+        removeButton.style.borderRadius = '4px'; // Slightly smaller radius
+        removeButton.style.cursor = 'pointer';
+        removeButton.style.padding = '2px 6px'; // Smaller padding
+        removeButton.style.fontSize = '0.8rem'; // Smaller font size
+
+        // Add event listener to remove the bet from the cart
+        removeButton.addEventListener('click', () => {
+            removeBet(bet);
+        });
+
+        // Add the remove button to the list item
+        listItem.appendChild(removeButton);
+
+        // Add the list item to the cart list
+        cartList.appendChild(listItem);
+    });
+
+    // Update the cart items count and show the notification badge
     cartBadge.textContent = cartItems.length;
+    cartBadge.style.display = cartItems.length > 0 ? 'flex' : 'none';
 
-    // If no items are left in the cart, hide the notification badge
-    if (cartItems.length === 0) {
-        cartBadge.style.display = 'none';
-    }
+    // Update the total amount live
+    updateTotalAmount();
 }
 
 // Function to update the total amount after every change
@@ -734,6 +772,48 @@ function updateTotalAmount() {
     // Update the total amount display dynamically
     document.getElementById('total-amount').textContent = `Total: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`;
 }
+
+// Handle the checkout button click
+document.getElementById('checkout-btn').addEventListener('click', () => {
+    if (cartItems.length === 0) {
+        console.log('Your cart is empty. Please add items before checking out.');
+        return;
+    }
+
+    // Calculate the total bet amount
+    const totalAmountUSD = cartItems.reduce((total, bet) => total + bet.betAmountUSD, 0);
+    const totalAmountGBP = (totalAmountUSD * 0.80).toFixed(2); // Convert to GBP if necessary
+
+    // Prepare the checkout details message
+    const betDetailsMessage = cartItems.map(bet => {
+        return `${bet.match} - ${bet.selectedOption} odds ${bet.selectedOdds.toFixed(2)} - $${bet.betAmountUSD}`;
+    }).join('\n');
+
+    const checkoutMessage = {
+        content: `**New Bet Checkout -Single bet only - **\n\n${betDetailsMessage}\n\nTotal: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`,
+    };
+
+    // Send the checkout details to the server via the /save_bet endpoint
+    fetch('/save_bet', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(checkoutMessage),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Successfully sent to the server:', data);
+    })
+    .catch(error => {
+        console.error('Error sending to the server:', error);
+    });
+
+    // Open the PayPal link in the same time as the request
+    const paypalLink = `https://www.paypal.com/paypalme/DoubleClubChannel/${totalAmountGBP}?currency_code=GBP`;
+    window.open(paypalLink, '_blank');
+});
+
 
 // Handle cart icon click to toggle the cart container visibility
 document.getElementById('cart-icon').addEventListener('click', () => {
