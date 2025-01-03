@@ -435,13 +435,57 @@ body {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
 }
 
+/* Container for the match header */
+.match-header-container {
+    display: flex;
+    justify-content: center; /* Center the items horizontally */
+    align-items: center; /* Center the items vertically */
+    width: 100%; /* Take up full width */
+    overflow: hidden; /* Prevent overflowing content */
+    text-align: center;
+}
+
+/* Styling for each match header item */
 .match-header {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: 600;
-
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 1.25rem; /* Default font size */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Show "..." when the text overflows */
+    flex-shrink: 1; /* Allow text to shrink if there's not enough space */
+    transition: font-size 0.2s ease; /* Smooth font-size transition */
 }
+
+/* Responsive font size adjustment */
+.match-header span {
+    font-size: 1.25rem;
+}
+
+@media (max-width: 600px) {
+    /* Adjust font size for smaller screens */
+    .match-header {
+        font-size: 1rem;
+    }
+}
+
+.match-header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Space between teams and the 'VS' */
+}
+
+/* Adjust font-size for very small screens */
+@media (max-width: 400px) {
+    .match-header {
+        font-size: 0.8rem;
+    }
+}
+
 
 /* Styling for date and time in the top-right corner */
 .match-date-time {
@@ -940,15 +984,18 @@ function renderMatches(matches) {
         // Only display match if at least one odd is available
         if (homeOdds || drawOdds || awayOdds) {
             matchDiv.innerHTML = `
-                <div class="match-header">
-                    <span>${match.home_team}</span>
-                </div>
-                <div class="match-header">
-                    <span>VS</span>
-                </div>
-                <div class="match-header">
-                    <span>${match.away_team}</span>
-                </div>
+                <div class="match-header-container">
+    <div class="match-header home-team">
+        <span>${match.home_team}</span>
+    </div>
+    <div class="match-header vs">
+        <span>VS</span>
+    </div>
+    <div class="match-header away-team">
+        <span>${match.away_team}</span>
+    </div>
+</div>
+
 
                 <div class="odds-display" style="text-align: center;">
                     <div class="bet-container">
