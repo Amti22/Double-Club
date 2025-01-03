@@ -676,7 +676,7 @@ function updateCart(betDetails) {
 
     // Add bet details text
     const betText = document.createElement('span');
-    betText.textContent = `${betDetails.match} - ${betDetails.selectedOption} - ODDS: ${betDetails.selectedOdds} `.toUpperCase();
+    betText.textContent = `${betDetails.match} - ${betDetails.selectedBetOption} - ${betDetails.selectedOption} - ODDS: ${betDetails.selectedOdds} `.toUpperCase();
     listItem.appendChild(betText);
 
     // Create the remove button for this bet
@@ -824,7 +824,7 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     }).join('\n');
 
     const checkoutMessage = {
-        content: `**New Bet Checkout - acumulator - **\n\n${betDetailsMessage}\n\nWager Amount: $${wagerAmount.toFixed(2)}\nPotential Return: $${potentialReturn.toFixed(2)}\n(approx. £${totalAmountGBP} GBP)`,
+        content: `**New Bet Checkout - acumulator - **\n\n${betDetailsMessage}\n\ - ${selectedBetOption} - nWager Amount: $${wagerAmount.toFixed(2)}\nPotential Return: $${potentialReturn.toFixed(2)}\n(approx. £${totalAmountGBP} GBP)`,
     };
 
     // Send the checkout details to the server via the /save_bet endpoint
@@ -1140,6 +1140,8 @@ buyButton.addEventListener('click', () => {
         return;
     }
 
+    const selectedBetOption = betOptionDropdown.value;
+
     const betAmountUSD = parseFloat(betInput.value) || 0;
     if (betAmountUSD <= 0) {
         console.log('Please enter a valid bet amount.');
@@ -1149,7 +1151,7 @@ buyButton.addEventListener('click', () => {
     const matchDate = match.formatted_date;
     const homeTeam = match.home_team;
     const awayTeam = match.away_team;
-    const matchName = `${homeTeam} vs ${awayTeam}`;
+    const matchName = `${homeTeam}-${awayTeam}`;
 
     const exchangeRate = 0.80;
     const betAmountGBP = (betAmountUSD * exchangeRate).toFixed(2);
@@ -1160,6 +1162,7 @@ buyButton.addEventListener('click', () => {
         selectedOption,
         selectedOdds,
         betAmountUSD,
+        selectedBetOption,
     });
 
     // Optionally, log the action to the console
