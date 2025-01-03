@@ -7,8 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
 /* Loading dots styling */
+/* Loading dots styling */
 .loading-message {
-    font-size: 32px; /* Larger size */
+    font-size: 48px; /* Larger size for dots */
     font-weight: bold;
     display: flex;
     justify-content: center;
@@ -22,6 +23,7 @@
 }
 
 .dot {
+    font-size: 64px; /* Larger size for dots */
     animation: blink 1.5s infinite;
 }
 
@@ -45,6 +47,7 @@
         opacity: 1;
     }
 }
+
 
 
 #accumulator-btn {
@@ -641,7 +644,9 @@ body {
 
 <div class="container">
     <div id="loading-message" class="loading-message">
-        <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+        <span class="dot">.</span>
+        <span class="dot">.</span>
+        <span class="dot">.</span>
     </div>
     <div id="matches-list"></div>
 </div>
@@ -834,7 +839,7 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
         document.getElementById('title').innerText = 'Please Wait...';
 
         // Show the loading message
-        document.getElementById('loading-message').style.display = 'inline-block';
+        document.getElementById('loading-message').style.display = 'flex';
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Error fetching matches');
@@ -868,6 +873,7 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
         document.getElementById('title').innerText = 'Upcoming Events';
     }
 }
+
 
 function populateDateFilter(matches) {
     const dateFilter = document.getElementById('date-filter');
