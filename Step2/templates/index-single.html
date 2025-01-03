@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
 /* Loading dots styling */
-/* Loading dots styling */
 .loading-message {
     font-size: 48px; /* Larger size for dots */
     font-weight: bold;
@@ -15,15 +14,16 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    color: transparent; /* So the background-clip can apply */
-    background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%);
-    -webkit-background-clip: text;
     margin-top: 20px;
     height: 100px; /* Ensure it's centered vertically */
 }
 
 .dot {
     font-size: 64px; /* Larger size for dots */
+    font-weight: bold;
+    background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%);
+    -webkit-background-clip: text;
+    color: transparent; /* Makes the gradient visible */
     animation: blink 1.5s infinite;
 }
 
@@ -612,7 +612,7 @@ body {
 <body>
 
 <div class="container">
-    <h1 id="title">Loading Matches...</h1>
+    <h1 id="title">Loading Matches</h1>
 
     <div class="filters-container">
         <select id="sport-filter" class="sport-dropdown">
@@ -835,8 +835,8 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     const url = sport ? `/matches?sport=${sport}&date=${date}` : `/matches?date=${date}`;
 
     try {
-        // Change the title to "Please Wait"
-        document.getElementById('title').innerText = 'Please Wait...';
+
+        document.getElementById('title').innerText = 'Preparing Matches';
 
         // Show the loading message
         document.getElementById('loading-message').style.display = 'flex';
