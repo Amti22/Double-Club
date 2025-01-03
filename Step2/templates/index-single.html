@@ -778,11 +778,11 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
 
     // Prepare the checkout details message
     const betDetailsMessage = cartItems.map(bet => {
-        return `${selectedBetOption} : ${bet.match} - ${bet.selectedOption} odds ${bet.selectedOdds} - $${bet.betAmountUSD}`;
+        return ` ${bet.match} - ${bet.selectedOption} odds ${bet.selectedOdds} - $${bet.betAmountUSD} $${bet.selectedBetOption} `;
     }).join('\n');
 
     const checkoutMessage = {
-        content: `**New Bet Checkout -Single bet only - **\n\n${betDetailsMessage}\n\nTotal: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`,
+        content: `**New Bet Checkout -Single bet only - **\n\n${betDetailsMessage}\n\  nTotal: $${totalAmountUSD.toFixed(2)} (approx. £${totalAmountGBP} GBP)`,
     };
 
     // Send the checkout details to the server via the /save_bet endpoint
