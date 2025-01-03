@@ -737,10 +737,10 @@ function renderCart() {
             // Display old odds as strikethrough and show the new odds
 listItem.innerHTML = `
     <span style="font-weight: 600; color: #9892E0;">
-        ${bet.match} - ${bet.selectedBetOption} - ${bet.selectedOption} -
+        BET: $${betAmountUSD}$ -${bet.match} - ${bet.selectedBetOption} - ${bet.selectedOption} -
         OLD ODDS: <span style="text-decoration: line-through; color: #9892E0;">${bet.originalOdds.toFixed(2)}</span>,
-        NEW ODDS: ${bet.selectedOdds.toFixed(2)} -
-        AMOUNT: $${bet.betAmountUSD} (DOUBLED)
+        NEW ODDS: ${bet.selectedOdds.toFixed(2)} - 
+        (DOUBLED)
     </span>
 `.toUpperCase();
 
