@@ -392,7 +392,20 @@ body {
 
 
 
+/* Date and Time styling */
+.match-date-time {
+    position: absolute;
+    top: 10px;    /* Position from the top */
+    right: 10px;  /* Position from the right */
+    font-size: 0.8rem;  /* Smaller font size */
+    font-weight: normal;
+    color: #333;  /* Choose your desired color */
+    text-align: right;
+}
 
+.match-date-time span {
+    display: block; /* Stack date and time vertically */
+}
 
 .section-title {
     text-align: center;
@@ -410,11 +423,11 @@ body {
     margin-bottom: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 100%; /* Take full width of container */
+    width: 100%; /* Full width of container */
     max-width: 600px; /* Match the max-width of the dropdowns */
     margin-left: auto; /* Center horizontally */
     margin-right: auto; /* Center horizontally */
-
+    position: relative; /* This allows positioning of elements inside */
 }
 
 .match-container:hover {
@@ -430,16 +443,19 @@ body {
 
 }
 
-.match-header-time {
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    font-weight: 600;
+/* Styling for date and time in the top-right corner */
+.match-date-time {
+    position: absolute;  /* Position relative to the .match-container */
+    top: 10px;  /* Distance from the top */
+    right: 10px; /* Distance from the right */
+    font-size: 0.8rem; /* Smaller font size */
+    font-weight: 500;
+    color: var(--content-primary);
+    text-align: right; /* Align text to the right */
 }
 
-.match-header span {
-    font-size: 1.2rem;
+.match-date-time span {
+    display: block; /* Stack date and time vertically */
 }
 
 .bet-container {
@@ -909,7 +925,7 @@ async function fetchAndRenderMatches() {
 
 function renderMatches(matches) {
     const matchesList = document.getElementById('matches-list');
-    matchesList.innerHTML = '';
+    matchesList.innerHTML = ''; // Clear previous matches
 
     matches.forEach(match => {
         const matchDiv = document.createElement('div');
@@ -927,43 +943,53 @@ function renderMatches(matches) {
                 <div class="match-header">
                     <span>${match.home_team}</span>
                 </div>
-                    <div class="match-header">
+                <div class="match-header">
                     <span>VS</span>
                 </div>
-                </div>
-                    <div class="match-header">
+                <div class="match-header">
                     <span>${match.away_team}</span>
                 </div>
 
                 <div class="odds-display" style="text-align: center;">
-                    <strong></strong>
-                    ${homeOdds ? `${match.formatted_date}` : ''}
-                </div>
-                <div class="bet-container">
-                    <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1">
-                    <div class="button-group">
-                        ${homeOdds ? `<button class="home-btn">Home: ${match.odds.home_odds}</button>` : ''}
-                        ${drawOdds ? `<button class="draw-btn">Draw: ${match.odds.draw_odds}</button>` : ''}
-                        ${awayOdds ? `<button class="away-btn">Away: ${match.odds.away_odds}</button>` : ''}
+                    <div class="bet-container">
+                        <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1">
+                        <div class="button-group">
+                            ${homeOdds ? `<button class="home-btn">Home: ${match.odds.home_odds}</button>` : ''}
+                            ${drawOdds ? `<button class="draw-btn">Draw: ${match.odds.draw_odds}</button>` : ''}
+                            ${awayOdds ? `<button class="away-btn">Away: ${match.odds.away_odds}</button>` : ''}
+                        </div>
+
+                        <!-- Betting Option Dropdown -->
+                        <select class="bet-option-dropdown">
+                            <option value="1X2" selected>1X2</option> <!-- Default selected -->
+                            <option value="BTS">Both Teams Score</option>
+                            <option value="DNB">Draw No Bet</option>
+                            <option value="DC">Double Chance</option>
+                        </select>
                     </div>
-                    <!-- Betting Option Dropdown -->
-                    <select class="bet-option-dropdown">
-                        <option value="1X2" selected>1X2</option>  <!-- Default selected -->
-                        <option value="BTS">Both Teams Score</option>
-                        <option value="DNB">Draw No Bet</option>
-                        <option value="DC">Double Chance</option>
-                    </select>
+
+                    <div class="return-display">Expected Return: $0</div>
+                    <div class="membership-return">Double-Club Membership Return: $0</div>
+                    <button class="buy-button" style="display: none;">Place Bet</button>
                 </div>
-                <div class="return-display">Expected Return: $0</div>
-                <div class="membership-return">Double-Club Membership Return: $0</div>
-                <button class="buy-button" style="display: none;">Place Bet</button>
             `;
+
+            // Add match date and time to the top right of the container
+            const dateTimeDiv = document.createElement('div');
+            dateTimeDiv.classList.add('match-date-time');
+            dateTimeDiv.innerHTML = `
+                <span>${match.date}</span> <!-- Date -->
+                <span>${match.time}</span> <!-- Time -->
+            `;
+            matchDiv.appendChild(dateTimeDiv);
 
             matchesList.appendChild(matchDiv);
             attachListeners(matchDiv, match);
         }
     });
 }
+
+
 
 
 
