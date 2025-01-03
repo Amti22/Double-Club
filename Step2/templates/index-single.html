@@ -22,21 +22,20 @@
 /* Filters container (to group dropdown and button next to each other) */
 .filters-container {
     display: flex;
-    flex-direction: column; /* Stack items vertically */
-    gap: 4px; /* Space between dropdown and button */
+    flex-direction: column;
+    gap: 4px;
     width: 100%;
-    max-width: 400px; /* Optional: Set a max width to avoid excessive stretching */
+    max-width: 600px; /* Increased from 400px */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
 }
-
 
 /* Loading message styling */
 #loading-message {
     font-size: 1.5rem;
-    font-weight: bold;
+    font-weight: normal; /* Changed to normal to remove boldness */
     text-align: center;
-    background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%);
-    -webkit-background-clip: text;
-    color: transparent;
+    color: var(--content-primary); /* Use the primary content color */
     margin-bottom: 10px; /* Space below message */
 }
 
@@ -48,6 +47,8 @@
         margin: auto;
     }
 }
+
+
 
 
 
@@ -119,29 +120,29 @@
 #accumulator-btn:hover {
     background-color: #4F5660; /* Hover effect */
 }
-
-
-
+/* Cart Container */
 #cart-container {
-    display: flex;
+    display: none;
     flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    align-items: center; /* Center content horizontally */
+    justify-content: flex-start;
+    align-items: flex-start;
     position: fixed;
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Offset by half of its own width and height to center */
-    width: 120vw; /* Increase width to 120% of the viewport width */
-    height: 100vh; /* Take up the entire height of the viewport */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Changed to 100vw since we'll use transform for full extension */
+    height: 100vh;
     background-color: #2F3340;
     border: 1px solid #3E4352;
-    border-radius: 10px;
-    padding: 30px 60px; /* Increase padding for top and bottom, and left-right */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for contrast */
-    z-index: 9998; /* Keep it on top of all other elements */
+    border-radius: 0;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9998;
     overflow-y: auto;
+    transform-origin: center; /* Ensure scaling happens from the center */
+    margin: 0; /* Remove auto margins */
+    margin-left: auto; /* Centering the container */
+    margin-right: auto; /* Centering the container */
 }
-
 
 /* Cart Content */
 #cart-container .content {
@@ -152,6 +153,8 @@
     max-width: 800px; /* Limit content width for better readability */
     height: 100%; /* Ensure content area fills the full height */
 }
+
+
 
 /* Buttons (Checkout and Minimize) */
 #cart-container button {
@@ -168,6 +171,7 @@
     margin-top: 10px;
     margin-bottom: 20px;
     transition: background-color 0.3s ease;
+
 }
 
     #cart-container button:hover {
@@ -259,10 +263,14 @@
     border: none;
     transition: background-color 0.3s ease;
     margin: 0; /* Remove default margin */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
 }
 
 #accumulator-btn {
     margin-top: 5px; /* Add a small margin between the button and dropdown */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
 }
 
 
@@ -358,27 +366,24 @@ body {
     width: 100%;
 }
 
-/* Ensure container has flex column layout */
+
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
+   margin-top: 10px;
+    display: block; /* Ensure it's a block-level element */
+    width: 100%; /* Use 100% width of the viewport's container */
+    max-width: none; /* Remove any max-width restrictions */
+    padding: 0;
+    margin-left: auto; /* Centering the container */
+    margin-right: auto; /* Centering the container */
+    box-sizing: border-box;
 
 }
 
-/* Ensure container has flex column layout */
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
 
-}
+
+
+
+
 
 .section-title {
     text-align: center;
@@ -391,11 +396,16 @@ body {
 .match-container {
     background-color: #2F3340;
     border: 1px solid #3E4352;
-      border-radius: 15px; /* Round corners for card-like effect */
+    border-radius: 15px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%; /* Take full width of container */
+    max-width: 600px; /* Match the max-width of the dropdowns */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
+
 }
 
 .match-container:hover {
@@ -408,6 +418,7 @@ body {
     justify-content: center;
     align-items: center;
     font-weight: 600;
+
 }
 
 .match-header-time {
@@ -579,6 +590,7 @@ body {
             <option value="">Select Sport</option>
         </select>
         <select id="date-filter" class="date-dropdown">
+            <option value="">Today's Matches</option>
         <!-- Date options will be populated dynamically -->
         </select>
         <button id="accumulator-btn" class="accumulator-btn">Try Acumulator Betting</button>
@@ -593,12 +605,11 @@ body {
 </div>
 
 <!-- Cart Container (Initially Hidden) -->
-<div id="cart-container" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border: 1px solid #3E4352; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: none; width: 300px;">
-    <h3 style="color: #FFFFFF96; font-weight: 700;">Your Cart</h3>
+<div id="cart-container">    <h3 style="color: #FFFFFF96; font-weight: 700;">Your Cart</h3>
     <ul id="cart-list" style="list-style-type: none; padding-left: 0; color: #FFFFFF96;"></ul>
     <div id="total-amount" style="color: #FFFFFF96; margin-top: 10px;">Total: $0.00 (approx. £0.00 GBP)</div>
-    <button id="checkout-btn" style="background-color: #3E4352; color: #FFFFFF96; border: 2px solid #3E4352; border-radius: 6px; padding: 12px 15px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 10px;">Checkout</button>
-    <button id="minimize-btn" style="background-color: #D9534F; color: white; border: none; border-radius: 6px; cursor: pointer; padding: 4px 8px; font-size: 0.8rem; margin-top: 10px;">Minimize</button>
+    <button id="checkout-btn">Checkout</button>
+<button id="minimize-btn">Minimize</button>
 </div>
 
 
@@ -627,15 +638,16 @@ function updateCart(betDetails) {
     listItem.textContent = `${betDetails.match} - ${betDetails.selectedOption} odds ${betDetails.selectedOdds} - $${betDetails.betAmountUSD}`;
 
     // Create a "Remove" button for the bet
-    const removeButton = document.createElement('button');
-    removeButton.textContent = 'Remove';
-    removeButton.style.marginLeft = '10px';
-    removeButton.style.backgroundColor = '#D9534F';
-    removeButton.style.color = 'white';
-    removeButton.style.border = 'none';
-    removeButton.style.borderRadius = '6px';
-    removeButton.style.cursor = 'pointer';
-    removeButton.style.padding = '4px 8px';
+const removeButton = document.createElement('button');
+removeButton.textContent = 'Remove';
+removeButton.style.marginLeft = '5px'; // Adjust spacing
+removeButton.style.backgroundColor = '#D9534F';
+removeButton.style.color = 'white';
+removeButton.style.border = 'none';
+removeButton.style.borderRadius = '4px'; // Slightly smaller radius
+removeButton.style.cursor = 'pointer';
+removeButton.style.padding = '2px 6px'; // Smaller padding
+removeButton.style.fontSize = '0.8rem'; // Smaller font size
 
     // Add event listener to remove the bet from the cart
     removeButton.addEventListener('click', () => {
@@ -824,10 +836,17 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
         document.getElementById('loading-message').style.display = 'none';
     }
 }
-
-// Function to populate the date filter dropdown
 function populateDateFilter(matches) {
     const dateFilter = document.getElementById('date-filter');
+
+    // Clear existing options to prevent duplicates
+    dateFilter.innerHTML = '';
+
+    // Add the default "Today's Matches" option
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = "Today's Matches";
+    dateFilter.appendChild(defaultOption);
 
     // Get all unique dates from the matches
     const dates = [...new Set(matches.map(match => match.formatted_date.split(' - ')[0]))];
@@ -849,10 +868,10 @@ function populateDateFilter(matches) {
         dateFilter.appendChild(option);
     });
 
-    // Set today's date as the default value
-    const today = new Date().toISOString().split('T')[0];
-    dateFilter.value = today;
+    // Always set "Today's Matches" as the selected option
+    dateFilter.value = '';
 }
+
 
 // Call this function after fetching the matches
 async function fetchAndRenderMatches() {
