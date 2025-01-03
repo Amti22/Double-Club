@@ -736,18 +736,13 @@ function renderCart() {
         if (bet.isOddsDoubled) {
             // Display old odds as strikethrough and show the new odds
 listItem.innerHTML = `
-    <span style="
-        background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%);
-        -webkit-background-clip: text;
-        color: transparent;
-    ">
+    <span style="font-weight: 600; color: #9892E0;">
         ${bet.match} - ${bet.selectedBetOption} - ${bet.selectedOption} -
-        OLD ODDS: <span style="text-decoration: line-through; color: transparent;">${bet.originalOdds.toFixed(2)}</span>,
+        OLD ODDS: <span style="text-decoration: line-through; color: #9892E0;">${bet.originalOdds.toFixed(2)}</span>,
         NEW ODDS: ${bet.selectedOdds.toFixed(2)} -
         AMOUNT: $${bet.betAmountUSD} (DOUBLED)
     </span>
 `.toUpperCase();
-
 
             listItem.style.color = '#28a745'; // Highlight doubled odds in green
             listItem.style.fontWeight = 'bold';
