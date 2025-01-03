@@ -5,8 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Betting Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
- <style>
+   <style>
+/* Loading dots styling */
+.loading-message {
+    font-size: 32px; /* Larger size */
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: transparent; /* So the background-clip can apply */
+    background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%);
+    -webkit-background-clip: text;
+    margin-top: 20px;
+    height: 100px; /* Ensure it's centered vertically */
+}
 
+.dot {
+    animation: blink 1.5s infinite;
+}
+
+.dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
 
 
 #accumulator-btn {
@@ -22,33 +60,13 @@
 /* Filters container (to group dropdown and button next to each other) */
 .filters-container {
     display: flex;
-    flex-direction: column; /* Stack items vertically */
-    gap: 4px; /* Space between dropdown and button */
-    width: 100%;
-    max-width: 400px; /* Optional: Set a max width to avoid excessive stretching */
+    flex-direction: column;
+    gap: 4px;
+    width: 90%;
+    max-width: 600px; /* Increased from 400px */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
 }
-
-
-/* Loading message styling */
-#loading-message {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-    background: linear-gradient(45deg, #695EE6 0%, #FF7A7A 85%);
-    -webkit-background-clip: text;
-    color: transparent;
-    margin-bottom: 10px; /* Space below message */
-}
-
-@media (max-width: 600px) {
-    #loading-message {
-        font-size: 1.25rem;  /* Smaller font size on mobile */
-        line-height: normal;
-        letter-spacing: normal;
-        margin: auto;
-    }
-}
-
 
 
 /* Title styling */
@@ -62,14 +80,6 @@
     margin-bottom: 20px; /* Space below title */
 }
 
-    @media (max-width: 600px) {
-        #title {
-            font-size: 1.75rem;
-            line-height: normal;
-            letter-spacing: normal;
-            margin: auto;
-        }
-    }
 
  /* Accumulator Button (Styled like other buttons) */
     #accumulator-btn {
@@ -97,7 +107,7 @@
         justify-content: space-between; /* Distribute the items with space between them */
         align-items: center;
         gap: 20px; /* Optional: add some gap between elements */
-        margin-top: 20px;
+        margin-top: 5px;
     }
 
 
@@ -119,29 +129,29 @@
 #accumulator-btn:hover {
     background-color: #4F5660; /* Hover effect */
 }
-
-
-
+/* Cart Container */
 #cart-container {
-    display: flex;
+    display: none;
     flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    align-items: center; /* Center content horizontally */
+    justify-content: flex-start;
+    align-items: flex-start;
     position: fixed;
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Offset by half of its own width and height to center */
-    width: 120vw; /* Increase width to 120% of the viewport width */
-    height: 100vh; /* Take up the entire height of the viewport */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Changed to 100vw since we'll use transform for full extension */
+    height: 100vh;
     background-color: #2F3340;
     border: 1px solid #3E4352;
-    border-radius: 10px;
-    padding: 30px 60px; /* Increase padding for top and bottom, and left-right */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for contrast */
-    z-index: 9998; /* Keep it on top of all other elements */
+    border-radius: 0;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9998;
     overflow-y: auto;
+    transform-origin: center; /* Ensure scaling happens from the center */
+    margin: 0; /* Remove auto margins */
+    margin-left: auto; /* Centering the container */
+    margin-right: auto; /* Centering the container */
 }
-
 
 /* Cart Content */
 #cart-container .content {
@@ -152,6 +162,8 @@
     max-width: 800px; /* Limit content width for better readability */
     height: 100%; /* Ensure content area fills the full height */
 }
+
+
 
 /* Buttons (Checkout and Minimize) */
 #cart-container button {
@@ -168,6 +180,7 @@
     margin-top: 10px;
     margin-bottom: 20px;
     transition: background-color 0.3s ease;
+
 }
 
     #cart-container button:hover {
@@ -184,7 +197,7 @@
         font-weight: 600;
         cursor: pointer;
         font-size: 0.9rem;
-        margin-top: 10px;
+        margin-top: 5px;
         margin-bottom: 20px; /* Ensure some spacing between the button and bottom edge */
         transition: background-color 0.3s ease; /* Hover effect */
     }
@@ -259,10 +272,14 @@
     border: none;
     transition: background-color 0.3s ease;
     margin: 0; /* Remove default margin */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
 }
 
 #accumulator-btn {
     margin-top: 5px; /* Add a small margin between the button and dropdown */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
 }
 
 
@@ -358,27 +375,24 @@ body {
     width: 100%;
 }
 
-/* Ensure container has flex column layout */
+
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
+   margin-top: 15px;
+    display: block; /* Ensure it's a block-level element */
+    width: 90%; /* Use 100% width of the viewport's container */
+    max-width: none; /* Remove any max-width restrictions */
+    padding: 0;
+    margin-left: auto; /* Centering the container */
+    margin-right: auto; /* Centering the container */
+    box-sizing: border-box;
 
 }
 
-/* Ensure container has flex column layout */
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
 
-}
+
+
+
+
 
 .section-title {
     text-align: center;
@@ -391,11 +405,16 @@ body {
 .match-container {
     background-color: #2F3340;
     border: 1px solid #3E4352;
-      border-radius: 15px; /* Round corners for card-like effect */
+    border-radius: 15px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%; /* Take full width of container */
+    max-width: 600px; /* Match the max-width of the dropdowns */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
+
 }
 
 .match-container:hover {
@@ -408,6 +427,7 @@ body {
     justify-content: center;
     align-items: center;
     font-weight: 600;
+
 }
 
 .match-header-time {
@@ -489,14 +509,14 @@ body {
     text-align: right;
     font-weight: 600;
     color: var(--content-primary);
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
 .membership-return {
     text-align: right;
     font-weight: 600;
     color: var(--overline-primary);
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
 .buy-button {
@@ -506,7 +526,7 @@ body {
     border: none;
     border-radius: 6px;
     padding: 15px;
-    margin-top: 15px;
+    margin-top: 5px;
     font-weight: 700;
     cursor: pointer;
 }
@@ -532,6 +552,7 @@ body {
 
      #title {
         font-size: 1.5rem;
+        margin-bottom: 20px;
     }
 
      #loading-message {
@@ -566,13 +587,12 @@ body {
     }
 }
     </style>
-
 </head>
 
 <body>
 
 <div class="container">
-    <h1 id="title">Upcoming Events</h1>
+    <h1 id="title">Loading Matches...</h1>
 
     <div class="filters-container">
         <select id="sport-filter" class="sport-dropdown">
@@ -580,6 +600,7 @@ body {
         </select>
 
         <select id="date-filter" class="date-dropdown">
+            <option value="">Today's Matches</option>
         <!-- Date options will be populated dynamically -->
         </select>
 
@@ -597,25 +618,24 @@ body {
 
 
 <!-- Cart Container (Initially Hidden) -->
-<div id="cart-container" style="position: fixed; bottom: 10px; right: 10px; background-color: #2F3340; border: 1px solid #3E4352; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: none; width: 300px;">
-    <h3 style="color: #FFFFFF96; font-weight: 700;">Your Cart</h3>
-    <ul id="cart-list" style="list-style-type: none; padding-left: 0; color: #FFFFFF96;"></ul>
-    <div style="margin-top: 10px;">
+<div id="cart-container"><h3 style="color: #FFFFFF96; font-weight: 700;">Your Cart</h3>
+     <ul id="cart-list" style="list-style-type: none; padding-left: 0; color: #FFFFFF96;"></ul>
         <label for="bet-amount" style="color: #FFFFFF96; font-size: 0.9rem;">Bet Amount:</label>
         <input id="bet-amount" type="number" min="0" step="0.01" value="1" style="margin-left: 10px; width: 80px; border-radius: 4px; border: 1px solid #3E4352; padding: 4px;">
-    </div>
     <div id="total-odds" style="color: #FFFFFF96; margin-top: 10px;">Total Odds: 1.00</div>
-    <div id="potential-return" style="color: #FFFFFF96; margin-top: 10px;">Potential Return: $0.00</div>
-    <div id="membership-return" class="membership-return" style="text-align: right; font-weight: 600; color: var(--Overline); margin-top: 15px; display: block;">Membership Return: $0.00</div>
-    <button id="checkout-btn" style="background-color: #3E4352; color: #FFFFFF96; border: 2px solid #3E4352; border-radius: 6px; padding: 12px 15px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-top: 10px;">Checkout</button>
-    <button id="minimize-btn" style="background-color: #D9534F; color: white; border: none; border-radius: 6px; cursor: pointer; padding: 4px 8px; font-size: 0.8rem; margin-top: 10px;">Minimize</button>
+    <div id="potential-return">Potential Return: $0.00</div>
+    <div id="membership-return" class="membership-return">Membership Return: $0.00</div>
+    <button id="checkout-btn">Checkout</button>
+    <button id="minimize-btn">Minimize</button>
 </div>
 
 
 
 
 <div class="container">
-    <div id="loading-message">Please wait while matches are being loaded...</div>
+    <div id="loading-message" class="loading-message">
+        <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+    </div>
     <div id="matches-list"></div>
 </div>
 
@@ -831,18 +851,21 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
             });
         } catch (error) {
             console.error(error);
-            alert('Could not load sports at this time. Please try again later.');
         }
     }
 
-    async function fetchMatches() {
+   async function fetchMatches() {
     const sport = document.getElementById('sport-filter').value;
     const date = document.getElementById('date-filter').value;
     const url = sport ? `/matches?sport=${sport}&date=${date}` : `/matches?date=${date}`;
 
     try {
+        // Change the title to "Please Wait"
+        document.getElementById('title').innerText = 'Please Wait...';
+
         // Show the loading message
-        document.getElementById('loading-message').style.display = 'block';
+        document.getElementById('loading-message').style.display = 'inline-block';
+
         const response = await fetch(url);
         if (!response.ok) throw new Error('Error fetching matches');
 
@@ -870,14 +893,23 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
         console.error(error);
         document.getElementById('matches-list').innerHTML = '<p>Failed to load matches. Please try again later.</p>';
     } finally {
-        // Hide the loading message
+        // Hide the loading message and reset the title back to "Upcoming Events"
         document.getElementById('loading-message').style.display = 'none';
+        document.getElementById('title').innerText = 'Upcoming Events';
     }
 }
 
-// Function to populate the date filter dropdown
 function populateDateFilter(matches) {
     const dateFilter = document.getElementById('date-filter');
+
+    // Clear existing options to prevent duplicates
+    dateFilter.innerHTML = '';
+
+    // Add the default "Today's Matches" option
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = "Today's Matches";
+    dateFilter.appendChild(defaultOption);
 
     // Get all unique dates from the matches
     const dates = [...new Set(matches.map(match => match.formatted_date.split(' - ')[0]))];
@@ -899,10 +931,10 @@ function populateDateFilter(matches) {
         dateFilter.appendChild(option);
     });
 
-    // Set today's date as the default value
-    const today = new Date().toISOString().split('T')[0];
-    dateFilter.value = today;
+    // Always set "Today's Matches" as the selected option
+    dateFilter.value = '';
 }
+
 
 // Call this function after fetching the matches
 async function fetchAndRenderMatches() {
@@ -919,7 +951,6 @@ async function fetchAndRenderMatches() {
         console.error('Error fetching matches:', error);
     }
 }
-
 
 
 function renderMatches(matches) {
@@ -955,7 +986,7 @@ function renderMatches(matches) {
                     ${homeOdds ? `${match.formatted_date}` : ''}
                 </div>
                 <div class="bet-container">
-                    <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1" value="1" style="display: none;">
+                     <input type="number" class="bet-amount" placeholder="Enter Bet Amount" min="1" value="1" style="display: none;">
                     <div class="button-group">
                         ${homeOdds ? `<button class="home-btn">Home: ${match.odds.home_odds}</button>` : ''}
                         ${drawOdds ? `<button class="draw-btn">Draw: ${match.odds.draw_odds}</button>` : ''}
