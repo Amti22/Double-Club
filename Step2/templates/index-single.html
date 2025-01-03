@@ -668,7 +668,7 @@ function updateCart(betDetails) {
 
     // Create a new list item for the bet placed
     const listItem = document.createElement('li');
-    listItem.textContent = `${betDetails.match} - ${betDetails.selectedOption} odds ${betDetails.selectedOdds} - $${betDetails.betAmountUSD}`;
+    listItem.textContent = `${betDetails.match} - ${betDetails.selectedBetOption} - ${betDetails.selectedOption} - ODDS: ${betDetails.selectedOdds} - AMOUNT: $${betDetails.betAmountUSD}`.toUpperCase();
 
     // Create a "Remove" button for the bet
 const removeButton = document.createElement('button');
@@ -778,7 +778,7 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
 
     // Prepare the checkout details message
     const betDetailsMessage = cartItems.map(bet => {
-        return `${bet.match} - ${bet.selectedOption} odds ${bet.selectedOdds} - $${bet.betAmountUSD}`;
+        return `${selectedBetOption} : ${bet.match} - ${bet.selectedOption} odds ${bet.selectedOdds} - $${bet.betAmountUSD}`;
     }).join('\n');
 
     const checkoutMessage = {
@@ -866,7 +866,6 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
         }
     } catch (error) {
         console.error(error);
-        document.getElementById('matches-list').innerHTML = '<p>Failed to load matches. Please try again later.</p>';
     } finally {
         // Hide the loading message and reset the title back to "Upcoming Events"
         document.getElementById('loading-message').style.display = 'none';
@@ -1102,6 +1101,8 @@ buyButton.addEventListener('click', () => {
         return;
     }
 
+    const selectedBetOption = betOptionDropdown.value;
+
     const betAmountUSD = parseFloat(betInput.value) || 0;
     if (betAmountUSD <= 0) {
         console.log('Please enter a valid bet amount.');
@@ -1111,7 +1112,7 @@ buyButton.addEventListener('click', () => {
     const matchDate = match.formatted_date;
     const homeTeam = match.home_team;
     const awayTeam = match.away_team;
-    const matchName = `${homeTeam} vs ${awayTeam}`;
+    const matchName = `${homeTeam}-${awayTeam}`;
 
     const exchangeRate = 0.80;
     const betAmountGBP = (betAmountUSD * exchangeRate).toFixed(2);
@@ -1122,10 +1123,11 @@ buyButton.addEventListener('click', () => {
         selectedOption,
         selectedOdds,
         betAmountUSD,
+        selectedBetOption,
     });
 
     // Optionally, log the action to the console
-    console.log(`Bet placed on ${selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)} at odds ${selectedOdds} with $${betAmountUSD} (approx. £${betAmountGBP} GBP).\n\nMatch: ${homeTeam} vs ${awayTeam}\nDate: ${matchDate}`);
+    console.log(`${selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)} - ODDS: ${selectedOdds} - AMMOUNT: $${betAmountUSD}$`);
 });
 
 
