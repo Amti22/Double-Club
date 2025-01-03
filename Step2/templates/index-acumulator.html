@@ -824,7 +824,7 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     }).join('\n');
 
     const checkoutMessage = {
-        content: `**New Bet Checkout - acumulator - **\n\n${betDetailsMessage}\n\ - ${selectedBetOption} - nWager Amount: $${wagerAmount.toFixed(2)}\nPotential Return: $${potentialReturn.toFixed(2)}\n(approx. £${totalAmountGBP} GBP)`,
+        content: `**New Bet Checkout - acumulator - **\n\n${betDetailsMessage}\n\ - - nWager Amount: $${wagerAmount.toFixed(2)}\nPotential Return: $${potentialReturn.toFixed(2)}\n(approx. £${totalAmountGBP} GBP)  `,
     };
 
     // Send the checkout details to the server via the /save_bet endpoint
